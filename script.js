@@ -1,4 +1,3 @@
-
 // Linux Arsenal - Ultimate Terminal Learning Platform
 // Created by 0x0806
 // Version 2.0.0 - The Ultimate Edition
