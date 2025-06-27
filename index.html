@@ -1,0 +1,445 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linux Arsenal - Ultimate Terminal Learning Platform</title>
+    <meta name="description" content="The ultimate AI-driven 3D gamified Linux terminal learning experience. Master 500+ Linux commands through progressive missions with AI assistance.">
+    <meta name="keywords" content="Linux, Terminal, Learning, Education, Commands, AI, 3D, Gamification">
+    <meta name="author" content="0x0806">
+    <meta name="theme-color" content="#00ff88">
+    <link rel="manifest" href="manifest.json">
+    <link href="style.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+</head>
+<body>
+    <!-- Ultimate Terminal Loading Screen -->
+    <div id="ultimate-loading-screen" class="ultimate-loading-screen">
+        <!-- 3D Canvas Background -->
+        <canvas id="loading-three-canvas" class="loading-three-canvas"></canvas>
+        
+        <!-- Particle Matrix Background -->
+        <div id="loading-particles" class="loading-particles"></div>
+        
+        <!-- Terminal Container -->
+        <div class="loading-terminal-container">
+            <!-- Terminal Header -->
+            <div class="loading-terminal-header">
+                <div class="terminal-controls">
+                    <span class="control close"></span>
+                    <span class="control minimize"></span>
+                    <span class="control maximize"></span>
+                </div>
+                <div class="terminal-title">
+                    <i class="fas fa-terminal"></i>
+                    <span class="terminal-path">root@linuxarsenal:~#</span>
+                </div>
+                <div class="terminal-status">
+                    <span class="status-indicator"></span>
+                    <span class="status-text">INITIALIZING</span>
+                </div>
+            </div>
+            
+            <!-- Terminal Body -->
+            <div class="loading-terminal-body">
+                <!-- Boot Sequence Display -->
+                <div class="boot-sequence" id="boot-sequence">
+                    <div class="ascii-banner">
+<pre class="banner-text">
+██╗     ██╗███╗   ██╗██╗   ██╗██╗  ██╗      █████╗ ██████╗ ███████╗███████╗███╗   ██╗ █████╗ ██╗     
+██║     ██║████╗  ██║██║   ██║╚██╗██╔╝     ██╔══██╗██╔══██╗██╔════╝██╔════╝████╗  ██║██╔══██╗██║     
+██║     ██║██╔██╗ ██║██║   ██║ ╚███╔╝      ███████║██████╔╝███████╗█████╗  ██╔██╗ ██║███████║██║     
+██║     ██║██║╚██╗██║██║   ██║ ██╔██╗      ██╔══██║██╔══██╗╚════██║██╔══╝  ██║╚██╗██║██╔══██║██║     
+███████╗██║██║ ╚████║╚██████╔╝██╔╝ ██╗     ██║  ██║██║  ██║███████║███████╗██║ ╚████║██║  ██║███████╗
+╚══════╝╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚═╝  ╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝╚═╝  ╚═══╝╚═╝  ╚═╝╚══════╝
+</pre>
+                        <div class="version-info">
+                            <span class="version">Version 2.0.0 - The Ultimate Edition</span>
+                            <span class="creator">Created by 0x0806</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Loading Messages -->
+                    <div class="loading-messages" id="loading-messages">
+                        <!-- Messages will be populated by JavaScript -->
+                    </div>
+                    
+                    <!-- System Status Grid -->
+                    <div class="system-status-grid" id="system-status-grid">
+                        <div class="status-section">
+                            <h4>⚡ Core Systems</h4>
+                            <div class="status-item">
+                                <span class="item-name">Quantum Processors</span>
+                                <span class="item-status" data-status="loading">INIT</span>
+                            </div>
+                            <div class="status-item">
+                                <span class="item-name">Neural Networks</span>
+                                <span class="item-status" data-status="waiting">WAIT</span>
+                            </div>
+                            <div class="status-item">
+                                <span class="item-name">Security Matrix</span>
+                                <span class="item-status" data-status="waiting">WAIT</span>
+                            </div>
+                        </div>
+                        
+                        <div class="status-section">
+                            <h4>🎮 Game Engine</h4>
+                            <div class="status-item">
+                                <span class="item-name">3D Renderer</span>
+                                <span class="item-status" data-status="waiting">WAIT</span>
+                            </div>
+                            <div class="status-item">
+                                <span class="item-name">Physics Engine</span>
+                                <span class="item-status" data-status="waiting">WAIT</span>
+                            </div>
+                            <div class="status-item">
+                                <span class="item-name">AI Assistant</span>
+                                <span class="item-status" data-status="waiting">WAIT</span>
+                            </div>
+                        </div>
+                        
+                        <div class="status-section">
+                            <h4>🔧 Terminal Core</h4>
+                            <div class="status-item">
+                                <span class="item-name">Command Parser</span>
+                                <span class="item-status" data-status="waiting">WAIT</span>
+                            </div>
+                            <div class="status-item">
+                                <span class="item-name">Virtual FS</span>
+                                <span class="item-status" data-status="waiting">WAIT</span>
+                            </div>
+                            <div class="status-item">
+                                <span class="item-name">Mission System</span>
+                                <span class="item-status" data-status="waiting">WAIT</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Progress Visualization -->
+                    <div class="progress-visualization">
+                        <div class="progress-container">
+                            <div class="progress-label">SYSTEM INITIALIZATION</div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" id="main-progress-bar">
+                                    <div class="progress-fill" id="main-progress-fill"></div>
+                                    <div class="progress-glow"></div>
+                                </div>
+                                <div class="progress-percentage" id="progress-percentage">0%</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Sub-system Progress Bars -->
+                        <div class="subsystem-progress">
+                            <div class="sub-progress" id="cpu-progress">
+                                <span class="sub-label">CPU</span>
+                                <div class="sub-bar"><div class="sub-fill"></div></div>
+                                <span class="sub-value">0%</span>
+                            </div>
+                            <div class="sub-progress" id="memory-progress">
+                                <span class="sub-label">MEM</span>
+                                <div class="sub-bar"><div class="sub-fill"></div></div>
+                                <span class="sub-value">0%</span>
+                            </div>
+                            <div class="sub-progress" id="gpu-progress">
+                                <span class="sub-label">GPU</span>
+                                <div class="sub-bar"><div class="sub-fill"></div></div>
+                                <span class="sub-value">0%</span>
+                            </div>
+                            <div class="sub-progress" id="network-progress">
+                                <span class="sub-label">NET</span>
+                                <div class="sub-bar"><div class="sub-fill"></div></div>
+                                <span class="sub-value">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Terminal Cursor -->
+                    <div class="terminal-cursor-line">
+                        <span class="prompt">root@linuxarsenal:~# </span>
+                        <span class="loading-cursor">█</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Loading Stats Footer -->
+            <div class="loading-stats-footer">
+                <div class="stat-item">
+                    <span class="stat-label">Commands</span>
+                    <span class="stat-value" id="commands-count">500+</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Missions</span>
+                    <span class="stat-value" id="missions-count">100+</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Features</span>
+                    <span class="stat-value" id="features-count">5000+</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">AI Power</span>
+                    <span class="stat-value" id="ai-power">∞</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Glitch Overlay Effects -->
+        <div class="glitch-overlay" id="glitch-overlay"></div>
+        
+        <!-- Scanlines Effect -->
+        <div class="scanlines"></div>
+        
+        <!-- Corner HUD Elements -->
+        <div class="corner-hud top-left">
+            <div class="hud-text">SECURE BOOT</div>
+            <div class="hud-indicator"></div>
+        </div>
+        <div class="corner-hud top-right">
+            <div class="hud-text">AI READY</div>
+            <div class="hud-indicator"></div>
+        </div>
+        <div class="corner-hud bottom-left">
+            <div class="hud-text">ENCRYPTED</div>
+            <div class="hud-indicator"></div>
+        </div>
+        <div class="corner-hud bottom-right">
+            <div class="hud-text">0x0806</div>
+            <div class="hud-indicator"></div>
+        </div>
+    </div>
+
+    <!-- Main Application (Hidden Initially) -->
+    <div id="main-app" class="main-app hidden">
+        <!-- 3D Background -->
+        <canvas id="three-canvas" class="three-canvas"></canvas>
+        <div id="particles-js" class="particles-bg"></div>
+
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-left">
+                <div class="logo">
+                    <i class="fas fa-terminal"></i>
+                    <span>LINUX ARSENAL</span>
+                </div>
+                <div class="level-info">
+                    <span class="level">Level <span id="current-level">1</span></span>
+                    <span class="mission" id="current-mission">File System Basics</span>
+                </div>
+            </div>
+            <div class="header-center">
+                <div class="progress-container">
+                    <div class="xp-bar">
+                        <div class="xp-progress" id="xp-progress"></div>
+                        <span class="xp-text" id="xp-text">XP: 0 / 100</span>
+                    </div>
+                </div>
+            </div>
+            <div class="header-right">
+                <button class="btn btn-icon" id="theme-toggle" title="Toggle Theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button class="btn btn-icon" id="help-btn" title="Help">
+                    <i class="fas fa-question-circle"></i>
+                </button>
+                <button class="btn btn-icon" id="settings-btn" title="Settings">
+                    <i class="fas fa-cog"></i>
+                </button>
+                <div class="user-profile">
+                    <div class="avatar" id="user-avatar">
+                        <i class="fas fa-user-ninja"></i>
+                    </div>
+                    <span class="username" id="username">Hacker</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <nav class="nav-tabs">
+                    <button class="tab-btn active" data-tab="missions">
+                        <i class="fas fa-tasks"></i> Missions
+                    </button>
+                    <button class="tab-btn" data-tab="commands">
+                        <i class="fas fa-terminal"></i> Commands
+                    </button>
+                    <button class="tab-btn" data-tab="achievements">
+                        <i class="fas fa-trophy"></i> Achievements
+                    </button>
+                    <button class="tab-btn" data-tab="leaderboard">
+                        <i class="fas fa-crown"></i> Leaderboard
+                    </button>
+                </nav>
+
+                <div class="tab-content">
+                    <!-- Missions Tab -->
+                    <div class="tab-pane active" id="missions-tab">
+                        <div class="missions-list" id="missions-list">
+                            <!-- Missions will be populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Commands Tab -->
+                    <div class="tab-pane" id="commands-tab">
+                        <div class="command-search">
+                            <input type="text" id="command-search" placeholder="Search commands...">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <div class="commands-list" id="commands-list">
+                            <!-- Commands will be populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Achievements Tab -->
+                    <div class="tab-pane" id="achievements-tab">
+                        <div class="achievements-grid" id="achievements-grid">
+                            <!-- Achievements will be populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Leaderboard Tab -->
+                    <div class="tab-pane" id="leaderboard-tab">
+                        <div class="leaderboard-list" id="leaderboard-list">
+                            <!-- Leaderboard will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Terminal Section -->
+            <section class="terminal-section">
+                <div class="terminal-header">
+                    <div class="terminal-controls">
+                        <span class="control close"></span>
+                        <span class="control minimize"></span>
+                        <span class="control maximize"></span>
+                    </div>
+                    <div class="terminal-title">
+                        <i class="fas fa-terminal"></i>
+                        <span id="terminal-title">root@linuxarsenal:~#</span>
+                    </div>
+                    <div class="terminal-actions">
+                        <button class="btn btn-sm" id="clear-terminal">
+                            <i class="fas fa-broom"></i> Clear
+                        </button>
+                        <button class="btn btn-sm" id="full-screen">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="terminal-container">
+                    <div class="terminal" id="terminal">
+                        <div class="terminal-output" id="terminal-output">
+                            <div class="welcome-message">
+                                <pre class="ascii-art">
+██╗     ██╗███╗   ██╗██╗   ██╗██╗  ██╗      █████╗ ██████╗ ███████╗███████╗███╗   ██╗ █████╗ ██╗     
+██║     ██║████╗  ██║██║   ██║╚██╗██╔╝     ██╔══██╗██╔══██╗██╔════╝██╔════╝████╗  ██║██╔══██╗██║     
+██║     ██║██╔██╗ ██║██║   ██║ ╚███╔╝      ███████║██████╔╝███████╗█████╗  ██╔██╗ ██║███████║██║     
+██║     ██║██║╚██╗██║██║   ██║ ██╔██╗      ██╔══██║██╔══██╗╚════██║██╔══╝  ██║╚██╗██║██╔══██║██║     
+███████╗██║██║ ╚████║╚██████╔╝██╔╝ ██╗     ██║  ██║██║  ██║███████║███████╗██║ ╚████║██║  ██║███████╗
+╚══════╝╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚═╝  ╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝╚═╝  ╚═══╝╚═╝  ╚═╝╚══════╝
+                                </pre>
+                                <p class="terminal-line">Welcome to Linux Arsenal - The Ultimate Terminal Learning Platform</p>
+                                <p class="terminal-line">Created by 0x0806 | Version 2.0.0</p>
+                                <p class="terminal-line">Type 'help' to see available commands or 'tutorial' to start learning</p>
+                                <p class="terminal-line">Current Mission: <span class="highlight">File System Navigation</span></p>
+                                <p class="terminal-line"></p>
+                            </div>
+                        </div>
+                        <div class="terminal-input-line">
+                            <span class="prompt" id="prompt">root@linuxarsenal:~# </span>
+                            <input type="text" id="terminal-input" class="terminal-input" autocomplete="off" spellcheck="false">
+                            <span class="cursor"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="suggestions-panel" id="suggestions-panel">
+                    <div class="suggestions-header">
+                        <i class="fas fa-lightbulb"></i>
+                        <span>AI Suggestions</span>
+                    </div>
+                    <div class="suggestions-content" id="suggestions-content">
+                        <p>Type a command to get AI-powered suggestions...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- AI Assistant -->
+            <section class="ai-assistant" id="ai-assistant">
+                <div class="assistant-header">
+                    <div class="assistant-avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="assistant-info">
+                        <h3>ARIA</h3>
+                        <p>AI Linux Assistant</p>
+                    </div>
+                    <button class="btn btn-icon" id="toggle-assistant">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="assistant-content">
+                    <div class="chat-messages" id="chat-messages">
+                        <div class="message assistant-message">
+                            <div class="message-content">
+                                <p>Hello! I'm ARIA, your AI Linux assistant. I'm here to help you master Linux commands. What would you like to learn today?</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chat-input-container">
+                        <input type="text" id="chat-input" placeholder="Ask me anything about Linux..." class="chat-input">
+                        <button class="btn btn-primary" id="send-message">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                        <button class="btn btn-icon" id="voice-input" title="Voice Input">
+                            <i class="fas fa-microphone"></i>
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Floating Action Button -->
+        <button class="fab" id="ai-fab" title="Open AI Assistant">
+            <i class="fas fa-robot"></i>
+        </button>
+
+        <!-- Mission Complete Modal -->
+        <div class="modal" id="mission-complete-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2><i class="fas fa-trophy"></i> Mission Complete!</h2>
+                </div>
+                <div class="modal-body">
+                    <div class="achievement-animation">
+                        <div class="stars"></div>
+                        <div class="trophy-icon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                    </div>
+                    <h3 id="mission-title">Mission Title</h3>
+                    <p id="mission-description">Mission description...</p>
+                    <div class="rewards">
+                        <div class="reward">
+                            <i class="fas fa-star"></i>
+                            <span id="xp-earned">+50 XP</span>
+                        </div>
+                        <div class="reward">
+                            <i class="fas fa-medal"></i>
+                            <span id="badge-earned">New Badge</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" id="next-mission">Next Mission</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+</body>
+</html>
