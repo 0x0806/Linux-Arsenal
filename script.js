@@ -1249,7 +1249,8 @@ DESCRIPTION
                         hints: ["Use the 'mkdir' command", "Follow it with the directory name"]
                     },
                     {
-                        title: "Find Your Current Location",description: "Display the full path of your current working directory.",
+                        title: "Find Your Current Location",
+                        description: "Display the full path of your current working directory.",
                         xp: 20,
                         solution: "pwd",
                         hints: ["The 'pwd' command shows your current path", "PWD stands for 'Print Working Directory'"]
@@ -1706,7 +1707,9 @@ DESCRIPTION
                         id: `${difficulty}_${category}_${index}`,
                         difficulty: difficulty,
                         category: category,
-                        completed: false
+                        completed: false,
+                        solution: template.solution || 'echo "completed"',
+                        hints: template.hints || [`Use commands related to ${category.toLowerCase()}`]
                     });
                 });
 
@@ -1768,14 +1771,16 @@ DESCRIPTION
         const categoryVariations = variations[category] || variations["File Operations"];
         const selectedVariation = categoryVariations[variation % categoryVariations.length];
 
+        const modifiedSolution = selectedVariation.solutionModifier(Array.isArray(template.solution) ? template.solution[0] : template.solution);
+        
         return {
             title: `${template.title} ${selectedVariation.suffix}`,
             description: `${template.description} ${selectedVariation.suffix}.`,
             difficulty: difficulty,
             category: category,
             xp: template.xp + (variation * 2),
-            solution: selectedVariation.solutionModifier(template.solution),
-            hints: [...template.hints, `Try adding appropriate flags for ${selectedVariation.suffix}`]
+            solution: modifiedSolution || 'echo "completed"',
+            hints: [...(template.hints || []), `Try adding appropriate flags for ${selectedVariation.suffix}`]
         };
     }
 
@@ -2143,37 +2148,66 @@ DESCRIPTION
         if (!this.currentChallenge) return;
 
         const output = document.getElementById('challenge-output');
+        if (!output) return;
 
         // Add command to output
         const commandDiv = document.createElement('div');
         commandDiv.innerHTML = `<span class="command-prompt">user@challenge:~$</span> <span class="command-text">${command}</span>`;
         output.appendChild(commandDiv);
 
+        // Execute the command first to show realistic output
+        let commandOutput = '';
+        let commandError = null;
+        
+        try {
+            commandOutput = this.executeCommandForChallenge(command);
+        } catch (error) {
+            commandError = error.message;
+        }
+
+        // Show command output
+        if (commandOutput) {
+            const outputDiv = document.createElement('div');
+            outputDiv.className = 'command-result';
+            outputDiv.textContent = commandOutput;
+            output.appendChild(outputDiv);
+        } else if (commandError) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'command-error';
+            errorDiv.textContent = commandError;
+            output.appendChild(errorDiv);
+        }
+
         // Check solution with flexible matching
         const solution = this.currentChallenge.solution;
-        let isCorrect = this.validateChallengeCommand(command, solution);
+        let isCorrect = false;
+        
+        try {
+            isCorrect = this.validateChallengeCommand(command, solution);
+            
+            // Also check if the command accomplished the goal (even if syntax differs)
+            if (!isCorrect && !commandError) {
+                isCorrect = this.checkChallengeGoalAccomplished(command, this.currentChallenge);
+            }
+        } catch (error) {
+            console.error('Challenge validation error:', error);
+            isCorrect = false;
+        }
 
         if (isCorrect) {
-            // Execute the command to show realistic output
-            try {
-                const commandOutput = this.executeCommandForChallenge(command);
-                if (commandOutput) {
-                    const outputDiv = document.createElement('div');
-                    outputDiv.className = 'command-result';
-                    outputDiv.textContent = commandOutput;
-                    output.appendChild(outputDiv);
-                }
-            } catch (error) {
-                // Show error but still mark as correct if solution matches
-                const errorDiv = document.createElement('div');
-                errorDiv.className = 'command-result';
-                errorDiv.textContent = error.message;
-                output.appendChild(errorDiv);
-            }
-
             const successDiv = document.createElement('div');
             successDiv.className = 'command-success';
-            successDiv.textContent = `✅ Correct! Well done! You earned ${this.currentChallenge.xp} XP.`;
+            successDiv.innerHTML = `
+                <div style="color: #00ff88; font-weight: bold; margin: 10px 0;">
+                    ✅ Excellent! Challenge completed!
+                </div>
+                <div style="color: #8ab4f8;">
+                    🎉 You earned <strong>${this.currentChallenge.xp} XP</strong>
+                </div>
+                <div style="color: #69b7ff; font-size: 14px; margin-top: 5px;">
+                    Keep up the great work! Moving to next challenge...
+                </div>
+            `;
             output.appendChild(successDiv);
 
             // Mark challenge as completed
@@ -2181,38 +2215,88 @@ DESCRIPTION
 
             setTimeout(() => {
                 this.closeChallenge();
-            }, 2000);
+            }, 3000);
         } else {
-            // Try to execute command anyway to show what would happen
-            try {
-                const commandOutput = this.executeCommandForChallenge(command);
-                if (commandOutput) {
-                    const outputDiv = document.createElement('div');
-                    outputDiv.className = 'command-result';
-                    outputDiv.textContent = commandOutput;
-                    output.appendChild(outputDiv);
-                }
-            } catch (error) {
-                const errorDiv = document.createElement('div');
-                errorDiv.className = 'command-error';
-                errorDiv.textContent = error.message;
-                output.appendChild(errorDiv);
-            }
-
             const hintDiv = document.createElement('div');
             hintDiv.className = 'command-error';
-            hintDiv.textContent = '❌ Not quite right. Try again or check the hints!';
+            hintDiv.innerHTML = `
+                <div style="color: #ff6b6b; margin: 10px 0;">
+                    ❌ Not quite right. Try again!
+                </div>
+                <div style="color: #ffa726; font-size: 14px;">
+                    💡 <strong>Hint:</strong> ${this.getContextualHint(command, this.currentChallenge)}
+                </div>
+            `;
             output.appendChild(hintDiv);
         }
 
         output.scrollTop = output.scrollHeight;
     }
 
+    checkChallengeGoalAccomplished(command, challenge) {
+        // Check if the command accomplished the challenge goal regardless of exact syntax
+        const cmd = command.toLowerCase().trim();
+        const title = challenge.title.toLowerCase();
+        
+        // Goal-based validation
+        if (title.includes('list') && title.includes('directory') && cmd.startsWith('ls')) {
+            return true;
+        }
+        if (title.includes('current') && title.includes('directory') && cmd === 'pwd') {
+            return true;
+        }
+        if (title.includes('home') && title.includes('directory') && cmd.match(/^cd(\s+~|\s*$)/)) {
+            return true;
+        }
+        if (title.includes('create') && title.includes('directory') && cmd.startsWith('mkdir')) {
+            return true;
+        }
+        if (title.includes('create') && title.includes('file') && cmd.startsWith('touch')) {
+            return true;
+        }
+        if (title.includes('display') && title.includes('contents') && cmd.startsWith('cat')) {
+            return true;
+        }
+        if (title.includes('echo') && title.includes('text') && cmd.startsWith('echo')) {
+            return true;
+        }
+        if (title.includes('current user') && cmd === 'whoami') {
+            return true;
+        }
+        if (title.includes('date') && title.includes('time') && cmd === 'date') {
+            return true;
+        }
+        if (title.includes('system') && title.includes('information') && cmd.startsWith('uname')) {
+            return true;
+        }
+        
+        return false;
+    }
+
+    getContextualHint(command, challenge) {
+        const cmd = command.toLowerCase().trim();
+        const solution = Array.isArray(challenge.solution) ? challenge.solution[0] : challenge.solution;
+        
+        if (!cmd) {
+            return "Enter a command to complete this challenge.";
+        }
+        
+        if (!cmd.startsWith(solution.split(' ')[0])) {
+            return `Try using the '${solution.split(' ')[0]}' command.`;
+        }
+        
+        if (challenge.hints && challenge.hints.length > 0) {
+            return challenge.hints[Math.floor(Math.random() * challenge.hints.length)];
+        }
+        
+        return `Expected: ${solution}`;
+    }
+
     validateChallengeCommand(command, solution) {
-        const normalizeCommand = (cmd) => cmd.toLowerCase().trim().replace(/\s+/g, ' ');
+        if (!solution) return false;
         
         if (Array.isArray(solution)) {
-            return solution.some(sol => this.commandMatches(command, sol));
+            return solution.some(sol => sol && this.commandMatches(command, sol));
         }
         
         return this.commandMatches(command, solution);
@@ -2220,46 +2304,199 @@ DESCRIPTION
 
     commandMatches(command, solution) {
         const cmdNorm = command.toLowerCase().trim();
-        const solNorm = solution.toLowerCase().trim();
+        
+        // Handle array solutions - shouldn't happen here since validateChallengeCommand handles arrays
+        if (Array.isArray(solution)) {
+            return solution.some(sol => this.commandMatches(command, sol));
+        }
+        
+        const solNorm = solution ? solution.toLowerCase().trim() : '';
         
         // Exact match
         if (cmdNorm === solNorm) return true;
         
-        // Handle common variations
         const cmdParts = cmdNorm.split(' ');
         const solParts = solNorm.split(' ');
         
-        // Same base command
+        // Same base command required
         if (cmdParts[0] !== solParts[0]) return false;
         
-        // Handle ls variations
-        if (cmdParts[0] === 'ls') {
-            // Allow different flag orders: ls -la = ls -al
-            if (cmdParts.length === 2 && solParts.length === 2) {
-                const cmdFlags = cmdParts[1].replace('-', '').split('').sort().join('');
-                const solFlags = solParts[1].replace('-', '').split('').sort().join('');
-                return cmdFlags === solFlags;
-            }
-            // ls with path variations
-            if (cmdParts.slice(1).join(' ').includes(solParts.slice(1).join(' ')) || 
-                solParts.slice(1).join(' ').includes(cmdParts.slice(1).join(' '))) {
-                return true;
+        // Handle specific command variations
+        switch (cmdParts[0]) {
+            case 'ls':
+                return this.validateLsCommand(cmdParts, solParts);
+            case 'cd':
+                return this.validateCdCommand(cmdParts, solParts);
+            case 'cat':
+                return this.validateCatCommand(cmdParts, solParts);
+            case 'mkdir':
+            case 'touch':
+            case 'rm':
+                return this.validateFileCommand(cmdParts, solParts);
+            case 'cp':
+            case 'mv':
+                return this.validateCopyMoveCommand(cmdParts, solParts);
+            case 'grep':
+                return this.validateGrepCommand(cmdParts, solParts);
+            case 'find':
+                return this.validateFindCommand(cmdParts, solParts);
+            case 'wc':
+                return this.validateWcCommand(cmdParts, solParts);
+            case 'head':
+            case 'tail':
+                return this.validateHeadTailCommand(cmdParts, solParts);
+            case 'sort':
+                return this.validateSortCommand(cmdParts, solParts);
+            default:
+                // For simple commands, check if all parts match
+                return cmdParts.join(' ') === solParts.join(' ');
+        }
+    }
+
+    validateLsCommand(cmdParts, solParts) {
+        // Handle flag variations
+        const cmdFlags = this.extractFlags(cmdParts);
+        const solFlags = this.extractFlags(solParts);
+        const cmdPaths = this.extractPaths(cmdParts);
+        const solPaths = this.extractPaths(solParts);
+
+        // Check if flags match (order doesn't matter)
+        const cmdFlagStr = cmdFlags.join('').split('').sort().join('');
+        const solFlagStr = solFlags.join('').split('').sort().join('');
+        
+        if (cmdFlagStr !== solFlagStr && solFlags.length > 0) {
+            // Allow subset of flags if solution doesn't specify all
+            if (!solFlagStr.split('').every(flag => cmdFlagStr.includes(flag))) {
+                return false;
             }
         }
+
+        // Check paths - allow variations like ~, /home/user, documents
+        return this.pathsMatch(cmdPaths, solPaths);
+    }
+
+    validateCdCommand(cmdParts, solParts) {
+        const cmdPath = cmdParts[1] || '~';
+        const solPath = solParts[1] || '~';
         
-        // Handle cd variations (cd ~, cd, cd /home/user)
-        if (cmdParts[0] === 'cd') {
-            if ((cmdParts[1] === '~' || cmdParts[1] === '/home/user' || !cmdParts[1]) &&
-                (solParts[1] === '~' || solParts[1] === '/home/user' || !solParts[1])) {
-                return true;
-            }
-        }
+        // Normalize home directory references
+        const normalizeHome = (path) => {
+            if (!path || path === '~' || path === '/home/user') return 'HOME';
+            return path;
+        };
         
-        // Handle file path variations
-        if (cmdNorm.includes('documents/readme.txt') && solNorm.includes('readme.txt')) return true;
-        if (solNorm.includes('documents/readme.txt') && cmdNorm.includes('readme.txt')) return true;
+        return normalizeHome(cmdPath) === normalizeHome(solPath);
+    }
+
+    validateCatCommand(cmdParts, solParts) {
+        const cmdFile = cmdParts[1];
+        const solFile = solParts[1];
         
-        return false;
+        if (!cmdFile || !solFile) return false;
+        
+        // Handle path variations
+        return this.filesMatch(cmdFile, solFile);
+    }
+
+    validateFileCommand(cmdParts, solParts) {
+        // For mkdir, touch, rm - check if the target file/directory matches
+        if (cmdParts.length < 2 || solParts.length < 2) return false;
+        
+        const cmdTarget = cmdParts[cmdParts.length - 1];
+        const solTarget = solParts[solParts.length - 1];
+        
+        return cmdTarget === solTarget;
+    }
+
+    validateCopyMoveCommand(cmdParts, solParts) {
+        // For cp, mv - check source and destination
+        if (cmdParts.length < 3 || solParts.length < 3) return false;
+        
+        const cmdSrc = cmdParts[cmdParts.length - 2];
+        const cmdDst = cmdParts[cmdParts.length - 1];
+        const solSrc = solParts[solParts.length - 2];
+        const solDst = solParts[solParts.length - 1];
+        
+        return this.filesMatch(cmdSrc, solSrc) && this.filesMatch(cmdDst, solDst);
+    }
+
+    validateGrepCommand(cmdParts, solParts) {
+        // Basic grep validation - pattern and file must match
+        if (cmdParts.length < 3 || solParts.length < 3) return false;
+        
+        const cmdPattern = cmdParts[1];
+        const cmdFile = cmdParts[2];
+        const solPattern = solParts[1];
+        const solFile = solParts[2];
+        
+        return cmdPattern === solPattern && this.filesMatch(cmdFile, solFile);
+    }
+
+    validateFindCommand(cmdParts, solParts) {
+        // Basic find validation
+        return cmdParts.join(' ').includes(solParts.slice(1).join(' '));
+    }
+
+    validateWcCommand(cmdParts, solParts) {
+        const cmdFile = cmdParts[cmdParts.length - 1];
+        const solFile = solParts[solParts.length - 1];
+        
+        return this.filesMatch(cmdFile, solFile);
+    }
+
+    validateHeadTailCommand(cmdParts, solParts) {
+        // Allow variations in number specification
+        const cmdFile = cmdParts[cmdParts.length - 1];
+        const solFile = solParts[solParts.length - 1];
+        
+        return this.filesMatch(cmdFile, solFile);
+    }
+
+    validateSortCommand(cmdParts, solParts) {
+        const cmdFile = cmdParts[cmdParts.length - 1];
+        const solFile = solParts[solParts.length - 1];
+        
+        return this.filesMatch(cmdFile, solFile);
+    }
+
+    extractFlags(parts) {
+        return parts.filter(part => part.startsWith('-') && !part.includes('/'));
+    }
+
+    extractPaths(parts) {
+        return parts.filter(part => !part.startsWith('-') && part !== parts[0]);
+    }
+
+    pathsMatch(cmdPaths, solPaths) {
+        if (cmdPaths.length === 0 && solPaths.length === 0) return true;
+        if (cmdPaths.length !== solPaths.length) return false;
+        
+        return cmdPaths.every((path, i) => this.filesMatch(path, solPaths[i]));
+    }
+
+    filesMatch(file1, file2) {
+        if (!file1 || !file2) return false;
+        if (file1 === file2) return true;
+        
+        // Handle path variations
+        const normalize = (path) => {
+            if (!path) return '';
+            if (path === '~' || path === '/home/user') return 'HOME';
+            if (path === '.' || path === './') return 'CURRENT';
+            if (path.startsWith('~/')) return 'HOME/' + path.slice(2);
+            if (path.startsWith('./')) return 'CURRENT/' + path.slice(2);
+            return path;
+        };
+        
+        const norm1 = normalize(file1);
+        const norm2 = normalize(file2);
+        
+        // Check if one contains the other (for relative vs absolute paths)
+        return norm1 === norm2 || 
+               norm1.includes(norm2) || 
+               norm2.includes(norm1) ||
+               (norm1.includes('documents/readme.txt') && norm2.includes('readme.txt')) ||
+               (norm2.includes('documents/readme.txt') && norm1.includes('readme.txt'));
     }
 
     executeCommandForChallenge(command) {
@@ -2271,6 +2508,9 @@ DESCRIPTION
             switch (cmd) {
                 case 'ls':
                     return this.listFiles(args);
+                case 'cd':
+                    this.changeDirectory(args[0] || '~');
+                    return `Changed directory to: ${this.getDisplayPath()}`;
                 case 'pwd':
                     return this.currentDirectory;
                 case 'whoami':
@@ -2278,7 +2518,10 @@ DESCRIPTION
                 case 'date':
                     return new Date().toString();
                 case 'uname':
-                    return 'Linux linux-arsenal 5.4.0-74-generic';
+                    if (args.includes('-a')) {
+                        return 'Linux linux-arsenal 5.4.0-74-generic #83-Ubuntu SMP Sat May 8 02:35:39 UTC 2021 x86_64 x86_64 x86_64 GNU/Linux';
+                    }
+                    return 'Linux';
                 case 'echo':
                     return args.join(' ');
                 case 'cat':
@@ -2286,11 +2529,75 @@ DESCRIPTION
                         return this.readFile(args[0]);
                     }
                     return '';
+                case 'mkdir':
+                    if (args[0]) {
+                        this.makeDirectory(args[0]);
+                        return `Directory '${args[0]}' created`;
+                    }
+                    return 'mkdir: missing operand';
+                case 'touch':
+                    if (args[0]) {
+                        this.createFile(args[0]);
+                        return `File '${args[0]}' created`;
+                    }
+                    return 'touch: missing operand';
+                case 'rm':
+                    if (args[0]) {
+                        this.removeFile(args);
+                        return `File '${args[0]}' removed`;
+                    }
+                    return 'rm: missing operand';
+                case 'cp':
+                    if (args.length >= 2) {
+                        this.copyFile(args[0], args[1]);
+                        return `Copied '${args[0]}' to '${args[1]}'`;
+                    }
+                    return 'cp: missing operand';
+                case 'mv':
+                    if (args.length >= 2) {
+                        this.moveFile(args[0], args[1]);
+                        return `Moved '${args[0]}' to '${args[1]}'`;
+                    }
+                    return 'mv: missing operand';
+                case 'grep':
+                    if (args.length >= 2) {
+                        return this.grepCommand(args);
+                    }
+                    return 'grep: missing pattern or file';
+                case 'find':
+                    return this.findCommand(args);
+                case 'wc':
+                    if (args.length > 0) {
+                        return this.wordCount(args);
+                    }
+                    return 'wc: missing operand';
+                case 'head':
+                    if (args.length > 0) {
+                        return this.headCommand(args);
+                    }
+                    return 'head: missing operand';
+                case 'tail':
+                    if (args.length > 0) {
+                        return this.tailCommand(args);
+                    }
+                    return 'tail: missing operand';
+                case 'sort':
+                    if (args.length > 0) {
+                        return this.sortCommand(args);
+                    }
+                    return 'sort: missing operand';
+                case 'history':
+                    return this.showHistory();
+                case 'man':
+                    if (args[0]) {
+                        return this.showManual(args[0]);
+                    }
+                    return 'man: missing command';
                 default:
                     return `Command executed: ${command}`;
             }
         } catch (error) {
-            throw error;
+            return `Error: ${error.message}`;
         }
     }
 
