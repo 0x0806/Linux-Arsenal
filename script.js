@@ -427,6 +427,18 @@ class LinuxArsenal {
                 case 'man':
                     output = this.showManual(args[0]);
                     break;
+                case 'wc':
+                    output = this.wordCount(args);
+                    break;
+                case 'head':
+                    output = this.headCommand(args);
+                    break;
+                case 'tail':
+                    output = this.tailCommand(args);
+                    break;
+                case 'sort':
+                    output = this.sortCommand(args);
+                    break;
                 default:
                     output = `Command '${cmd}' not found. Type 'help' for available commands.`;
                     isError = true;
@@ -766,6 +778,141 @@ class LinuxArsenal {
         }
 
         return results.join('\n');
+    }
+
+    wordCount(args) {
+        if (!args || args.length === 0) {
+            throw new Error('wc: missing file operand');
+        }
+
+        const filename = args.find(arg => !arg.startsWith('-')) || args[args.length - 1];
+        const showLines = args.includes('-l');
+        const showWords = args.includes('-w');
+        const showChars = args.includes('-c');
+
+        const path = this.resolvePath(filename);
+        const node = this.getNode(path);
+
+        if (!node) {
+            throw new Error(`wc: ${filename}: No such file or directory`);
+        }
+
+        if (node.type !== 'file') {
+            throw new Error(`wc: ${filename}: Is a directory`);
+        }
+
+        const content = node.content || '';
+        const lines = content.split('\n').length;
+        const words = content.split(/\s+/).filter(word => word.length > 0).length;
+        const chars = content.length;
+
+        if (showLines) return lines.toString();
+        if (showWords) return words.toString();
+        if (showChars) return chars.toString();
+
+        return `${lines} ${words} ${chars} ${filename}`;
+    }
+
+    headCommand(args) {
+        if (!args || args.length === 0) {
+            throw new Error('head: missing file operand');
+        }
+
+        let numLines = 10;
+        let filename = args[args.length - 1];
+
+        // Parse -n flag
+        const nIndex = args.indexOf('-n');
+        if (nIndex !== -1 && args[nIndex + 1]) {
+            numLines = parseInt(args[nIndex + 1]);
+            filename = args[args.length - 1];
+        } else {
+            // Check for -5 style flag
+            const numberFlag = args.find(arg => arg.match(/^-\d+$/));
+            if (numberFlag) {
+                numLines = parseInt(numberFlag.substring(1));
+            }
+        }
+
+        const path = this.resolvePath(filename);
+        const node = this.getNode(path);
+
+        if (!node) {
+            throw new Error(`head: ${filename}: No such file or directory`);
+        }
+
+        if (node.type !== 'file') {
+            throw new Error(`head: ${filename}: Is a directory`);
+        }
+
+        const content = node.content || '';
+        const lines = content.split('\n');
+        return lines.slice(0, numLines).join('\n');
+    }
+
+    tailCommand(args) {
+        if (!args || args.length === 0) {
+            throw new Error('tail: missing file operand');
+        }
+
+        let numLines = 10;
+        let filename = args[args.length - 1];
+
+        // Parse -n flag
+        const nIndex = args.indexOf('-n');
+        if (nIndex !== -1 && args[nIndex + 1]) {
+            numLines = parseInt(args[nIndex + 1]);
+            filename = args[args.length - 1];
+        } else {
+            // Check for -5 style flag
+            const numberFlag = args.find(arg => arg.match(/^-\d+$/));
+            if (numberFlag) {
+                numLines = parseInt(numberFlag.substring(1));
+            }
+        }
+
+        const path = this.resolvePath(filename);
+        const node = this.getNode(path);
+
+        if (!node) {
+            throw new Error(`tail: ${filename}: No such file or directory`);
+        }
+
+        if (node.type !== 'file') {
+            throw new Error(`tail: ${filename}: Is a directory`);
+        }
+
+        const content = node.content || '';
+        const lines = content.split('\n');
+        return lines.slice(-numLines).join('\n');
+    }
+
+    sortCommand(args) {
+        if (!args || args.length === 0) {
+            throw new Error('sort: missing file operand');
+        }
+
+        const filename = args.find(arg => !arg.startsWith('-')) || args[args.length - 1];
+        const reverse = args.includes('-r');
+
+        const path = this.resolvePath(filename);
+        const node = this.getNode(path);
+
+        if (!node) {
+            throw new Error(`sort: ${filename}: No such file or directory`);
+        }
+
+        if (node.type !== 'file') {
+            throw new Error(`sort: ${filename}: Is a directory`);
+        }
+
+        const content = node.content || '';
+        let lines = content.split('\n');
+        
+        lines.sort();
+        if (reverse) lines.reverse();
+        
+        return lines.join('\n');
     }
 
     // Utility functions for path resolution
@@ -1109,10 +1256,10 @@ DESCRIPTION
                     },
                     {
                         title: "Display File Contents",
-                        description: "Use the 'cat' command to display the contents of readme.txt.",
+                        description: "Use the 'cat' command to display the contents of readme.txt in the documents directory.",
                         xp: 35,
-                        solution: "cat documents/readme.txt",
-                        hints: ["Navigate to documents directory first", "Use 'cat' followed by the filename"]
+                        solution: ["cat documents/readme.txt", "cat ~/documents/readme.txt", "cat /home/user/documents/readme.txt"],
+                        hints: ["Use 'cat' followed by the file path", "The file is in the documents directory", "Try: cat documents/readme.txt"]
                     },
                     {
                         title: "Create Empty File",
@@ -1125,8 +1272,8 @@ DESCRIPTION
                         title: "Copy a File",
                         description: "Copy the file 'readme.txt' from documents to your current directory.",
                         xp: 40,
-                        solution: "cp documents/readme.txt .",
-                        hints: ["Use 'cp' command", "Source file first, then destination", "Use '.' for current directory"]
+                        solution: ["cp documents/readme.txt .", "cp documents/readme.txt ./", "cp ~/documents/readme.txt ."],
+                        hints: ["Use 'cp' command", "Source file first, then destination", "Use '.' for current directory", "Try: cp documents/readme.txt ."]
                     },
                     {
                         title: "Remove a File",
@@ -1162,22 +1309,22 @@ DESCRIPTION
                         title: "Count Lines in File",
                         description: "Count the number of lines in the readme.txt file using wc command.",
                         xp: 35,
-                        solution: "wc -l documents/readme.txt",
-                        hints: ["Use 'wc' command with -l flag", "Specify the file path"]
+                        solution: ["wc -l documents/readme.txt", "wc -l ~/documents/readme.txt"],
+                        hints: ["Use 'wc' command with -l flag", "Specify the file path", "Try: wc -l documents/readme.txt"]
                     },
                     {
                         title: "Display First 5 Lines",
                         description: "Show the first 5 lines of the readme.txt file using head command.",
                         xp: 30,
-                        solution: "head -n 5 documents/readme.txt",
-                        hints: ["Use 'head' command", "Use -n flag to specify number of lines"]
+                        solution: ["head -n 5 documents/readme.txt", "head -5 documents/readme.txt"],
+                        hints: ["Use 'head' command", "Use -n 5 or -5 to specify number of lines", "Try: head -n 5 documents/readme.txt"]
                     },
                     {
                         title: "Display Last 3 Lines",
                         description: "Show the last 3 lines of the readme.txt file using tail command.",
                         xp: 30,
-                        solution: "tail -n 3 documents/readme.txt",
-                        hints: ["Use 'tail' command", "Use -n flag to specify number of lines"]
+                        solution: ["tail -n 3 documents/readme.txt", "tail -3 documents/readme.txt"],
+                        hints: ["Use 'tail' command", "Use -n 3 or -3 to specify number of lines", "Try: tail -n 3 documents/readme.txt"]
                     }
                 ],
                 "System Administration": [
@@ -1229,10 +1376,10 @@ DESCRIPTION
                     },
                     {
                         title: "Move and Rename",
-                        description: "Move the file readme.txt to the projects directory and rename it to info.txt.",
+                        description: "Move the file readme.txt from documents to the projects directory and rename it to info.txt.",
                         xp: 55,
-                        solution: "mv documents/readme.txt projects/info.txt",
-                        hints: ["Use 'mv' command", "Specify full path with new name"]
+                        solution: ["mv documents/readme.txt projects/info.txt", "mv ~/documents/readme.txt ~/projects/info.txt"],
+                        hints: ["Use 'mv' command", "Specify source and destination with new name", "Try: mv documents/readme.txt projects/info.txt"]
                     },
                     {
                         title: "Create Directory Structure",
@@ -1296,8 +1443,8 @@ DESCRIPTION
                         title: "Word Count Analysis",
                         description: "Count words, lines, and characters in the readme.txt file.",
                         xp: 40,
-                        solution: "wc documents/readme.txt",
-                        hints: ["Use 'wc' command without flags", "Shows lines, words, and characters"]
+                        solution: ["wc documents/readme.txt", "wc ~/documents/readme.txt"],
+                        hints: ["Use 'wc' command without flags", "Shows lines, words, and characters", "Try: wc documents/readme.txt"]
                     }
                 ],
                 "System Administration": [
@@ -2002,21 +2149,31 @@ DESCRIPTION
         commandDiv.innerHTML = `<span class="command-prompt">user@challenge:~$</span> <span class="command-text">${command}</span>`;
         output.appendChild(commandDiv);
 
-        // Check solution
+        // Check solution with flexible matching
         const solution = this.currentChallenge.solution;
-        let isCorrect = false;
-
-        if (Array.isArray(solution)) {
-            // Multi-step challenge - check if command is one of the solutions
-            isCorrect = solution.includes(command);
-        } else {
-            isCorrect = command.toLowerCase() === solution.toLowerCase();
-        }
+        let isCorrect = this.validateChallengeCommand(command, solution);
 
         if (isCorrect) {
+            // Execute the command to show realistic output
+            try {
+                const commandOutput = this.executeCommandForChallenge(command);
+                if (commandOutput) {
+                    const outputDiv = document.createElement('div');
+                    outputDiv.className = 'command-result';
+                    outputDiv.textContent = commandOutput;
+                    output.appendChild(outputDiv);
+                }
+            } catch (error) {
+                // Show error but still mark as correct if solution matches
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'command-result';
+                errorDiv.textContent = error.message;
+                output.appendChild(errorDiv);
+            }
+
             const successDiv = document.createElement('div');
             successDiv.className = 'command-success';
-            successDiv.textContent = `Correct! Well done! You earned ${this.currentChallenge.xp} XP.`;
+            successDiv.textContent = `✅ Correct! Well done! You earned ${this.currentChallenge.xp} XP.`;
             output.appendChild(successDiv);
 
             // Mark challenge as completed
@@ -2026,13 +2183,115 @@ DESCRIPTION
                 this.closeChallenge();
             }, 2000);
         } else {
-            const errorDiv = document.createElement('div');
-            errorDiv.className = 'command-error';
-            errorDiv.textContent = 'Not quite right. Try again or check the hints!';
-            output.appendChild(errorDiv);
+            // Try to execute command anyway to show what would happen
+            try {
+                const commandOutput = this.executeCommandForChallenge(command);
+                if (commandOutput) {
+                    const outputDiv = document.createElement('div');
+                    outputDiv.className = 'command-result';
+                    outputDiv.textContent = commandOutput;
+                    output.appendChild(outputDiv);
+                }
+            } catch (error) {
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'command-error';
+                errorDiv.textContent = error.message;
+                output.appendChild(errorDiv);
+            }
+
+            const hintDiv = document.createElement('div');
+            hintDiv.className = 'command-error';
+            hintDiv.textContent = '❌ Not quite right. Try again or check the hints!';
+            output.appendChild(hintDiv);
         }
 
         output.scrollTop = output.scrollHeight;
+    }
+
+    validateChallengeCommand(command, solution) {
+        const normalizeCommand = (cmd) => cmd.toLowerCase().trim().replace(/\s+/g, ' ');
+        
+        if (Array.isArray(solution)) {
+            return solution.some(sol => this.commandMatches(command, sol));
+        }
+        
+        return this.commandMatches(command, solution);
+    }
+
+    commandMatches(command, solution) {
+        const cmdNorm = command.toLowerCase().trim();
+        const solNorm = solution.toLowerCase().trim();
+        
+        // Exact match
+        if (cmdNorm === solNorm) return true;
+        
+        // Handle common variations
+        const cmdParts = cmdNorm.split(' ');
+        const solParts = solNorm.split(' ');
+        
+        // Same base command
+        if (cmdParts[0] !== solParts[0]) return false;
+        
+        // Handle ls variations
+        if (cmdParts[0] === 'ls') {
+            // Allow different flag orders: ls -la = ls -al
+            if (cmdParts.length === 2 && solParts.length === 2) {
+                const cmdFlags = cmdParts[1].replace('-', '').split('').sort().join('');
+                const solFlags = solParts[1].replace('-', '').split('').sort().join('');
+                return cmdFlags === solFlags;
+            }
+            // ls with path variations
+            if (cmdParts.slice(1).join(' ').includes(solParts.slice(1).join(' ')) || 
+                solParts.slice(1).join(' ').includes(cmdParts.slice(1).join(' '))) {
+                return true;
+            }
+        }
+        
+        // Handle cd variations (cd ~, cd, cd /home/user)
+        if (cmdParts[0] === 'cd') {
+            if ((cmdParts[1] === '~' || cmdParts[1] === '/home/user' || !cmdParts[1]) &&
+                (solParts[1] === '~' || solParts[1] === '/home/user' || !solParts[1])) {
+                return true;
+            }
+        }
+        
+        // Handle file path variations
+        if (cmdNorm.includes('documents/readme.txt') && solNorm.includes('readme.txt')) return true;
+        if (solNorm.includes('documents/readme.txt') && cmdNorm.includes('readme.txt')) return true;
+        
+        return false;
+    }
+
+    executeCommandForChallenge(command) {
+        try {
+            const parts = command.split(' ');
+            const cmd = parts[0].toLowerCase();
+            const args = parts.slice(1);
+
+            switch (cmd) {
+                case 'ls':
+                    return this.listFiles(args);
+                case 'pwd':
+                    return this.currentDirectory;
+                case 'whoami':
+                    return 'user';
+                case 'date':
+                    return new Date().toString();
+                case 'uname':
+                    return 'Linux linux-arsenal 5.4.0-74-generic';
+                case 'echo':
+                    return args.join(' ');
+                case 'cat':
+                    if (args[0]) {
+                        return this.readFile(args[0]);
+                    }
+                    return '';
+                default:
+                    return `Command executed: ${command}`;
+            }
+        } catch (error) {
+            throw error;
+        }
     }
 
     completeChallenge(challengeId) {
