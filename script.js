@@ -27,9 +27,9 @@ class LinuxArsenal {
         this.challenges = [];
         this.aiAssistantOpen = true;
 
+        this.generateChallenges();
         this.initializeApp();
         this.loadUserData();
-        this.generateChallenges();
         this.setupEventListeners();
         this.initializeAchievements();
         this.updateLeaderboard();
@@ -47,13 +47,28 @@ class LinuxArsenal {
     loadUserData() {
         const savedData = localStorage.getItem('linuxArsenalUser');
         if (savedData) {
-            this.user = { ...this.user, ...JSON.parse(savedData) };
+            const data = JSON.parse(savedData);
+            this.user = { ...this.user, ...data };
+            
+            // Restore completed challenges
+            if (data.completedChallenges) {
+                data.completedChallenges.forEach(challengeId => {
+                    const challenge = this.challenges.find(c => c.id === challengeId);
+                    if (challenge) {
+                        challenge.completed = true;
+                    }
+                });
+            }
         }
         this.updateUserDisplay();
     }
 
     saveUserData() {
-        localStorage.setItem('linuxArsenalUser', JSON.stringify(this.user));
+        const userData = {
+            ...this.user,
+            completedChallenges: this.challenges.filter(c => c.completed).map(c => c.id)
+        };
+        localStorage.setItem('linuxArsenalUser', JSON.stringify(userData));
     }
 
     updateUserDisplay() {
@@ -1020,6 +1035,7 @@ DESCRIPTION
 
         this.updateUserDisplay();
         this.checkAchievements();
+        this.saveUserData(); // Save progress after command usage
     }
 
     updateSkillXP(command, xp) {
@@ -2026,14 +2042,16 @@ DESCRIPTION
             this.user.xp += challenge.xp;
 
             // Update level
-            const newLevel = Math.floor(this.user.xp / 100) + 1;
+            const newLevel = Math.floor(this.user.xp / 150) + 1;
             if (newLevel > this.user.level) {
                 this.user.level = newLevel;
                 this.showNotification(`Level Up! You are now level ${newLevel}!`, 'success');
+                this.user.xp += 25; // Level up bonus
             }
 
             this.updateUserDisplay();
             this.checkAchievements();
+            this.saveUserData(); // Save immediately when challenge is completed
             this.showNotification(`Challenge completed! +${challenge.xp} XP`, 'success');
         }
     }
@@ -2260,6 +2278,7 @@ DESCRIPTION
             // Award bonus XP
             this.user.xp += 50;
             this.updateUserDisplay();
+            this.saveUserData(); // Save when achievement is unlocked
         }
     }
 
