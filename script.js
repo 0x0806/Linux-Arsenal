@@ -2199,13 +2199,10 @@ DESCRIPTION
             successDiv.className = 'command-success';
             successDiv.innerHTML = `
                 <div style="color: #00ff88; font-weight: bold; margin: 10px 0;">
-                    ✅ Excellent! Challenge completed!
+                     Challenge completed!
                 </div>
                 <div style="color: #8ab4f8;">
-                    🎉 You earned <strong>${this.currentChallenge.xp} XP</strong>
-                </div>
-                <div style="color: #69b7ff; font-size: 14px; margin-top: 5px;">
-                    Keep up the great work! Moving to next challenge...
+                     You earned <strong>${this.currentChallenge.xp} XP</strong>
                 </div>
             `;
             output.appendChild(successDiv);
