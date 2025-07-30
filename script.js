@@ -143,6 +143,30 @@ class LinuxArsenal {
             });
         });
 
+        // Challenge search
+        const challengeSearch = document.getElementById('challenge-search');
+        if (challengeSearch) {
+            challengeSearch.addEventListener('input', (e) => {
+                this.searchChallenges(e.target.value);
+            });
+        }
+
+        // Generate new challenge button
+        const generateBtn = document.getElementById('generate-challenge');
+        if (generateBtn) {
+            generateBtn.addEventListener('click', () => {
+                this.generateRandomChallenge();
+            });
+        }
+
+        // Load more challenges
+        const loadMoreBtn = document.getElementById('load-more-challenges');
+        if (loadMoreBtn) {
+            loadMoreBtn.addEventListener('click', () => {
+                this.loadMoreChallenges();
+            });
+        }
+
         // Auto-save user data
         setInterval(() => {
             this.saveUserData();
@@ -1773,12 +1797,14 @@ DESCRIPTION
 
     loadChallenges() {
         const challengesGrid = document.getElementById('challenges-grid');
-        challengesGrid.innerHTML = this.challenges.map(challenge => `
+        
+        // Only show first 50 challenges for better performance
+        const displayChallenges = this.challenges.slice(0, 50);
+        
+        challengesGrid.innerHTML = displayChallenges.map(challenge => `
             <div class="challenge-card ${challenge.completed ? 'completed' : ''}" data-challenge-id="${challenge.id}">
                 <div class="challenge-header">
-                    <div>
-                        <div class="challenge-title">${challenge.title}</div>
-                    </div>
+                    <div class="challenge-title">${challenge.title}</div>
                     <div class="challenge-difficulty difficulty-${challenge.difficulty}">${challenge.difficulty}</div>
                 </div>
                 <div class="challenge-description">${challenge.description}</div>
@@ -1796,6 +1822,19 @@ DESCRIPTION
                 this.openChallenge(challengeId);
             });
         });
+
+        // Update challenge stats
+        this.updateChallengeStats();
+    }
+
+    updateChallengeStats() {
+        const totalChallenges = this.challenges.length;
+        const completedChallenges = this.challenges.filter(c => c.completed).length;
+        const successRate = totalChallenges > 0 ? Math.round((completedChallenges / totalChallenges) * 100) : 0;
+
+        document.getElementById('total-challenges').textContent = totalChallenges;
+        document.getElementById('completed-challenges').textContent = completedChallenges;
+        document.getElementById('success-rate').textContent = successRate + '%';
     }
 
     filterChallenges(filter) {
@@ -1803,7 +1842,10 @@ DESCRIPTION
         document.querySelectorAll('.filter-btn').forEach(btn => {
             btn.classList.remove('active');
         });
-        document.querySelector(`[data-filter="${filter}"]`).classList.add('active');
+        const filterBtn = document.querySelector(`[data-filter="${filter}"]`);
+        if (filterBtn) {
+            filterBtn.classList.add('active');
+        }
 
         // Filter challenges
         const challengeCards = document.querySelectorAll('.challenge-card');
@@ -1817,6 +1859,88 @@ DESCRIPTION
                 card.style.display = 'none';
             }
         });
+    }
+
+    searchChallenges(searchTerm) {
+        const challengeCards = document.querySelectorAll('.challenge-card');
+        const term = searchTerm.toLowerCase();
+
+        challengeCards.forEach(card => {
+            const challengeId = card.dataset.challengeId;
+            const challenge = this.challenges.find(c => c.id === challengeId);
+            
+            const matchesSearch = !term || 
+                challenge.title.toLowerCase().includes(term) ||
+                challenge.description.toLowerCase().includes(term) ||
+                challenge.category.toLowerCase().includes(term);
+
+            card.style.display = matchesSearch ? 'block' : 'none';
+        });
+    }
+
+    generateRandomChallenge() {
+        const difficulties = ['beginner', 'intermediate', 'advanced', 'expert'];
+        const categories = ['File Operations', 'Text Processing', 'System Administration', 'Networking', 'Security', 'Scripting'];
+        
+        const randomDifficulty = difficulties[Math.floor(Math.random() * difficulties.length)];
+        const randomCategory = categories[Math.floor(Math.random() * categories.length)];
+        
+        const newChallenge = {
+            id: `random_${Date.now()}`,
+            title: `Random ${randomCategory} Challenge`,
+            description: `Complete a ${randomDifficulty} level ${randomCategory.toLowerCase()} task.`,
+            difficulty: randomDifficulty,
+            category: randomCategory,
+            xp: 25 + Math.floor(Math.random() * 75),
+            solution: 'echo "Challenge completed"',
+            hints: [`This is a ${randomDifficulty} level challenge`, `Focus on ${randomCategory.toLowerCase()} commands`],
+            completed: false
+        };
+
+        this.challenges.unshift(newChallenge);
+        this.loadChallenges();
+        this.showNotification('New challenge generated!', 'success');
+    }
+
+    loadMoreChallenges() {
+        // This could load more challenges from a server or generate more locally
+        const currentCount = document.querySelectorAll('.challenge-card').length;
+        const remainingChallenges = this.challenges.slice(currentCount, currentCount + 20);
+        
+        if (remainingChallenges.length === 0) {
+            this.showNotification('No more challenges to load', 'info');
+            return;
+        }
+
+        const challengesGrid = document.getElementById('challenges-grid');
+        const newChallengeCards = remainingChallenges.map(challenge => `
+            <div class="challenge-card ${challenge.completed ? 'completed' : ''}" data-challenge-id="${challenge.id}">
+                <div class="challenge-header">
+                    <div class="challenge-title">${challenge.title}</div>
+                    <div class="challenge-difficulty difficulty-${challenge.difficulty}">${challenge.difficulty}</div>
+                </div>
+                <div class="challenge-description">${challenge.description}</div>
+                <div class="challenge-meta">
+                    <div class="challenge-category">${challenge.category}</div>
+                    <div class="challenge-xp">+${challenge.xp} XP</div>
+                </div>
+            </div>
+        `).join('');
+
+        challengesGrid.innerHTML += newChallengeCards;
+
+        // Add event listeners to new cards
+        document.querySelectorAll('.challenge-card').forEach(card => {
+            card.removeEventListener('click', this.handleChallengeClick);
+            card.addEventListener('click', this.handleChallengeClick.bind(this));
+        });
+
+        this.showNotification(`Loaded ${remainingChallenges.length} more challenges`, 'success');
+    }
+
+    handleChallengeClick(event) {
+        const challengeId = event.currentTarget.dataset.challengeId;
+        this.openChallenge(challengeId);
     }
 
     openChallenge(challengeId) {
