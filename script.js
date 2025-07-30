@@ -2218,10 +2218,10 @@ DESCRIPTION
             hintDiv.className = 'command-error';
             hintDiv.innerHTML = `
                 <div style="color: #ff6b6b; margin: 10px 0;">
-                    ❌ Not quite right. Try again!
+                     Try again!
                 </div>
                 <div style="color: #ffa726; font-size: 14px;">
-                    💡 <strong>Hint:</strong> ${this.getContextualHint(command, this.currentChallenge)}
+                     <strong>Hint:</strong> ${this.getContextualHint(command, this.currentChallenge)}
                 </div>
             `;
             output.appendChild(hintDiv);
