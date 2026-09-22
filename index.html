@@ -10,6 +10,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <meta name="description" content="Master Linux commands with interactive challenges, gamification, and AI-powered assistance">
     <meta name="keywords" content="Linux, command line, terminal, learning, education, programming">
+  <meta property="og:image" content="https://bolt.new/static/og_default.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://bolt.new/static/og_default.png">
 </head>
 <body>
     <!-- Error Boundary -->
@@ -310,6 +313,9 @@
                             <button id="terminal-help" class="terminal-action" title="Help">
                                 <i class="fas fa-question"></i>
                             </button>
+                            <button id="minimize-terminal" class="terminal-action" title="Minimize">
+                                <i class="fas fa-window-minimize"></i>
+                            </button>
                             <button id="fullscreen-terminal" class="terminal-action" title="Fullscreen">
                                 <i class="fas fa-expand"></i>
                             </button>
@@ -371,6 +377,26 @@
                 </div>
             </div>
         </section>
+
+        <!-- Minimized Terminal Bar (Arch Hyprland style) -->
+        <div id="minimized-terminal" class="minimized-terminal hidden">
+            <div class="minimized-terminal-bar">
+                <div class="minimized-terminal-left">
+                    <span class="minimized-dot red"></span>
+                    <span class="minimized-dot yellow"></span>
+                    <span class="minimized-dot green"></span>
+                    <span class="minimized-terminal-title">
+                        <i class="fas fa-terminal"></i> user@linux-arsenal:~$
+                    </span>
+                </div>
+                <div class="minimized-terminal-preview" id="minimized-preview"></div>
+                <div class="minimized-terminal-right">
+                    <button id="restore-terminal" class="minimized-action" title="Restore">
+                        <i class="fas fa-window-maximize"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
 
         <!-- Challenges Section -->
         <section id="challenges-section" class="content-section">

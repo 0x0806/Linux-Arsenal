@@ -2595,3 +2595,174 @@ body::after {
 ::-webkit-scrollbar-corner {
     background: var(--tertiary-bg);
 }
+
+/* ============================================
+   Arch Hyprland Minimized Terminal
+   ============================================ */
+.minimized-terminal {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 500;
+    pointer-events: none;
+}
+
+.minimized-terminal-bar {
+    pointer-events: auto;
+    background: rgba(23, 25, 35, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(0, 255, 65, 0.15);
+    border-radius: 12px 12px 0 0;
+    margin: 0 auto;
+    max-width: 900px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    gap: 16px;
+    box-shadow: 0 -5px 30px rgba(0, 0, 0, 0.4);
+    animation: minimizedSlideUp 0.3s ease-out;
+    transition: all 0.3s ease;
+}
+
+.minimized-terminal-bar:hover {
+    border-top-color: rgba(0, 255, 65, 0.3);
+    box-shadow: 0 -5px 40px rgba(0, 255, 65, 0.1);
+}
+
+@keyframes minimizedSlideUp {
+    from { transform: translateY(100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.minimized-terminal-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.minimized-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.minimized-dot.red { background: #f53b3b; }
+.minimized-dot.yellow { background: #f9d849; }
+.minimized-dot.green { background: #25e07a; }
+
+.minimized-terminal-title {
+    font-family: 'Fira Code', monospace;
+    font-size: 13px;
+    color: #25e07a;
+    margin-left: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+}
+
+.minimized-terminal-preview {
+    flex: 1;
+    font-family: 'Fira Code', monospace;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.4);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: center;
+}
+
+.minimized-terminal-right {
+    flex-shrink: 0;
+}
+
+.minimized-action {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.6);
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 14px;
+}
+
+.minimized-action:hover {
+    background: rgba(0, 255, 65, 0.1);
+    border-color: rgba(0, 255, 65, 0.3);
+    color: #25e07a;
+}
+
+/* Terminal minimize transition */
+.terminal-container.minimized {
+    opacity: 0;
+    transform: translateY(100%);
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+.terminal-container {
+    transition: all 0.3s ease;
+}
+
+/* Fluid terminal output animations */
+.command-line {
+    animation: fadeInLeft 0.2s ease-out;
+}
+
+.command-result {
+    animation: fadeInUp 0.15s ease-out;
+}
+
+.command-error {
+    animation: fadeInUp 0.15s ease-out;
+}
+
+@keyframes fadeInLeft {
+    from { opacity: 0; transform: translateX(-10px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.terminal-output {
+    scroll-behavior: smooth;
+}
+
+.terminal-input:focus {
+    animation: inputPulse 0.3s ease-out;
+}
+
+@keyframes inputPulse {
+    0% { box-shadow: 0 0 0 0 rgba(0, 255, 65, 0); }
+    50% { box-shadow: 0 0 0 3px rgba(0, 255, 65, 0.1); }
+    100% { box-shadow: 0 0 0 0 rgba(0, 255, 65, 0); }
+}
+
+/* Pipe/redirect output styling */
+.pipe-output {
+    color: var(--accent-blue);
+    font-style: italic;
+}
+
+.redirect-info {
+    color: var(--warning-color);
+    font-size: 13px;
+    padding: 4px 0;
+}
+
+.command-success {
+    animation: successFlash 0.5s ease-out;
+}
+
+@keyframes successFlash {
+    0% { background: rgba(0, 255, 65, 0.15); }
+    100% { background: transparent; }
+}
