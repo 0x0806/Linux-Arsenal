@@ -2595,3 +2595,124 @@ body::after {
 ::-webkit-scrollbar-corner {
     background: var(--tertiary-bg);
 }
+
+/* Analytics Bar Chart */
+.bar-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    height: 180px;
+    padding: 10px 0;
+}
+
+.bar-chart-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    height: 100%;
+    justify-content: flex-end;
+}
+
+.bar-chart-bar {
+    width: 100%;
+    max-width: 40px;
+    background: linear-gradient(180deg, var(--accent-green), var(--accent-blue));
+    border-radius: 4px 4px 0 0;
+    min-height: 4px;
+    transition: height 0.5s ease;
+    opacity: 0.8;
+}
+
+.bar-chart-bar:hover {
+    opacity: 1;
+    box-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+}
+
+.bar-chart-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-align: center;
+}
+
+/* Streak Calendar */
+.streak-calendar {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 6px;
+    padding: 10px 0;
+}
+
+.calendar-day {
+    aspect-ratio: 1;
+    background: var(--tertiary-bg);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: var(--text-muted);
+    border: 1px solid var(--border-color);
+    transition: all var(--transition-fast);
+}
+
+.calendar-day.active {
+    background: linear-gradient(135deg, rgba(0, 255, 65, 0.2), rgba(0, 212, 255, 0.1));
+    border-color: var(--accent-green);
+    color: var(--accent-green);
+    font-weight: 600;
+}
+
+.calendar-day:hover {
+    transform: scale(1.15);
+    z-index: 1;
+}
+
+/* Terminal Fullscreen */
+.terminal-fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 999;
+    grid-template-columns: 1fr 350px !important;
+    padding: 20px;
+    background: var(--primary-bg);
+}
+
+.terminal-fullscreen .terminal-main {
+    height: 100%;
+}
+
+/* Toast Notification Enhancement */
+.toast {
+    background: var(--secondary-bg);
+    border: 1px solid var(--border-color);
+    border-left: 4px solid var(--accent-green);
+    border-radius: 8px;
+    padding: 15px 20px;
+    max-width: 400px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+    animation: slideIn 0.3s ease-out;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.toast i {
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+.toast.success { border-left-color: var(--success-color); }
+.toast.success i { color: var(--success-color); }
+.toast.error { border-left-color: var(--error-color); }
+.toast.error i { color: var(--error-color); }
+.toast.warning { border-left-color: var(--warning-color); }
+.toast.warning i { color: var(--warning-color); }
+.toast.info { border-left-color: var(--accent-blue); }
+.toast.info i { color: var(--accent-blue); }
+
