@@ -3,6 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com data:; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+    <meta name="referrer" content="no-referrer">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Linux Arsenal - Learn Linux in a simulated machine">
+    <meta property="og:description" content="A bash-compatible terminal, 1500+ auto-verified challenges, man pages and tutorials. Runs entirely in your browser. Developed by 0x0806.">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Linux Arsenal - Learn Linux in a simulated machine">
+    <meta name="twitter:description" content="1500+ auto-verified Linux challenges in a sandboxed terminal. Developed by 0x0806.">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230a0a0a'/%3E%3Cpath d='M14 20l16 12-16 12' fill='none' stroke='%2300ff41' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M34 46h18' stroke='%2300ff41' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <title>Linux Arsenal - Master Linux Commands</title>
     <link href="style.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
@@ -13,6 +24,7 @@
     <meta name="keywords" content="Linux, command line, terminal, learning, education, programming">
 </head>
 <body>
+    <noscript><p style="padding:24px;color:#fff;background:#300">Linux Arsenal needs JavaScript: the whole Linux machine is simulated in your browser.</p></noscript>
     <!-- Error Boundary -->
     <div id="error-boundary" class="error-boundary hidden">
         <div class="error-content">
@@ -102,7 +114,7 @@
         </header>
 
         <!-- Toast Notifications -->
-        <div id="toast-container" class="toast-container"></div>
+        <div id="toast-container" class="toast-container" role="status" aria-live="polite"></div>
 
         <!-- Dashboard Section -->
         <section id="dashboard-section" class="content-section active">
@@ -682,20 +694,20 @@
         </div>
     </div>
 
-    <script src="js/vfs.js"></script>
-    <script src="js/shell.js"></script>
-    <script src="js/commands/util.js"></script>
-    <script src="js/commands/builtins.js"></script>
-    <script src="js/commands/files.js"></script>
-    <script src="js/commands/text.js"></script>
-    <script src="js/commands/awk.js"></script>
-    <script src="js/commands/system.js"></script>
-    <script src="js/commands/network.js"></script>
-    <script src="js/commands/devtools.js"></script>
-    <script src="js/docs.js"></script>
-    <script src="js/system.js"></script>
-    <script src="js/challenges.js"></script>
-    <script src="js/terminal.js"></script>
-    <script src="script.js"></script>
+    <script defer src="js/vfs.js"></script>
+    <script defer src="js/shell.js"></script>
+    <script defer src="js/commands/util.js"></script>
+    <script defer src="js/commands/builtins.js"></script>
+    <script defer src="js/commands/files.js"></script>
+    <script defer src="js/commands/text.js"></script>
+    <script defer src="js/commands/awk.js"></script>
+    <script defer src="js/commands/system.js"></script>
+    <script defer src="js/commands/network.js"></script>
+    <script defer src="js/commands/devtools.js"></script>
+    <script defer src="js/docs.js"></script>
+    <script defer src="js/system.js"></script>
+    <script defer src="js/challenges.js"></script>
+    <script defer src="js/terminal.js"></script>
+    <script defer src="script.js"></script>
 </body>
 </html>

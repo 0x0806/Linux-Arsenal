@@ -168,6 +168,9 @@
             if (info.code === 0) st.okCommands++;
             const d = this.day();
             d.commands++;
+            const nowMs = Date.now();
+            d.seconds += Math.min(60, Math.round((nowMs - (this.lastActive || nowMs - 5000)) / 1000));
+            this.lastActive = nowMs;
             if (info.code === 0 && st.totalCommands % 10 === 0) this.addXp(5, null, true);
             $('typing-speed').textContent = st.totalCommands;
             $('command-accuracy').textContent = this.accuracy() + '%';
@@ -384,9 +387,6 @@
             return n;
         }
         tickTime() {
-            const secs = Math.round((Date.now() - this.sessionStart) / 1000);
-            this.sessionStart = Date.now();
-            if (document.visibilityState !== 'hidden') this.day().seconds += secs;
             this.saveState();
         }
         addXp(n, reason, quiet) {

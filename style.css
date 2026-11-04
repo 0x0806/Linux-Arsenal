@@ -2775,3 +2775,20 @@ body::after {
 .footer-sep { opacity: 0.5; }
 .title-author { font-size: 11px; color: var(--text-muted); letter-spacing: 1px; white-space: nowrap; }
 @media (max-width: 760px) { .platform-title { display: flex; } .platform-title .title-text, .platform-title .title-subtitle { display: none; } .title-author { font-size: 10px; } }
+
+/* ---- design/typography/a11y review fixes ---- */
+html { -webkit-text-size-adjust: 100%; }
+body { text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
+code, pre, .la-term { font-family: 'Fira Code', 'DejaVu Sans Mono', ui-monospace, Menlo, Consolas, monospace; }
+.challenge-description, .challenge-task, .welcome-banner p { max-width: 75ch; }
+.terminal-statusbar, .muted, .challenge-note { font-size: 13px; }
+.toast-container { pointer-events: none; max-width: min(400px, calc(100vw - 20px)); }
+.toast { pointer-events: auto; }
+button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible, .nav-btn:focus-visible, .ref-item:focus-visible, .history-item:focus-visible {
+    outline: 2px solid var(--accent-blue); outline-offset: 2px;
+}
+.terminal-action, .close-modal, .settings-btn { min-width: 36px; min-height: 36px; }
+.control-dot { cursor: default; }
+.content-section.active { animation-duration: 0.25s; }
+.command-freq-item .command { flex: 0 0 150px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.command-freq-item .freq-bar { flex: 1; }

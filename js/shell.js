@@ -610,7 +610,10 @@
                     }
                     if (alts) {
                         const out = [];
-                        for (const a of alts) for (const r of braceExpand(pre + a + post)) out.push(r);
+                        for (const a of alts) {
+                            for (const r of braceExpand(pre + a + post)) out.push(r);
+                            if (out.length > 20000) throw new LimitError('brace expansion too large');
+                        }
                         return out;
                     }
                     start = -1;

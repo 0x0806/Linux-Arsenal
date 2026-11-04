@@ -180,7 +180,7 @@ function check(name, ok, info) { results.push([name, ok]); console.log((ok ? 'PA
   // other sections
   for (const s of ['achievements', 'leaderboard', 'analytics', 'dashboard']) {
     await evaluate('document.querySelector(\'[data-section="' + s + '"]\').click()');
-    await sleep(150);
+    await sleep(700);
     await shot('06-' + s);
   }
   check('achievements unlocked', (await evaluate('window.linuxArsenal.state.achievements.length')) >= 3, await evaluate('JSON.stringify(window.linuxArsenal.state.achievements)'));
