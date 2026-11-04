@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,13 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Linux Arsenal - Master Linux Commands</title>
     <link href="style.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <meta name="description" content="Master Linux commands with interactive challenges, gamification, and AI-powered assistance">
+    <meta name="description" content="Master the Linux command line in a fully simulated Linux machine: a real bash-compatible terminal, 1000+ auto-verified challenges, man pages and guided tutorials.">
+    <meta name="theme-color" content="#0a0a0a">
     <meta name="keywords" content="Linux, command line, terminal, learning, education, programming">
-  <meta property="og:image" content="https://bolt.new/static/og_default.png">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content="https://bolt.new/static/og_default.png">
 </head>
 <body>
     <!-- Error Boundary -->
@@ -94,6 +91,9 @@
                         <i class="fas fa-fire" aria-hidden="true"></i>
                         <span id="header-streak">0</span>
                     </div>
+                    <button id="open-settings" class="settings-btn" title="Settings" aria-label="Settings">
+                        <i class="fas fa-cog" aria-hidden="true"></i>
+                    </button>
                 </div>
             </div>
         </header>
@@ -154,7 +154,7 @@
                     
                     <div class="stat-card animated-card">
                         <div class="stat-icon">
-                            <i class="fas fa-target"></i>
+                            <i class="fas fa-bullseye"></i>
                         </div>
                         <div class="stat-content">
                             <h3 id="accuracy-rate">0%</h3>
@@ -305,7 +305,7 @@
                             <span class="control-dot yellow"></span>
                             <span class="control-dot green"></span>
                         </div>
-                        <div class="terminal-title">user@linux-arsenal:~$</div>
+                        <div class="terminal-title" id="terminal-title">user@linux-arsenal: ~</div>
                         <div class="terminal-actions">
                             <button id="clear-terminal" class="terminal-action" title="Clear Terminal">
                                 <i class="fas fa-trash"></i>
@@ -313,8 +313,8 @@
                             <button id="terminal-help" class="terminal-action" title="Help">
                                 <i class="fas fa-question"></i>
                             </button>
-                            <button id="minimize-terminal" class="terminal-action" title="Minimize">
-                                <i class="fas fa-window-minimize"></i>
+                            <button id="reset-machine" class="terminal-action" title="Reset practice machine">
+                                <i class="fas fa-rotate-left"></i>
                             </button>
                             <button id="fullscreen-terminal" class="terminal-action" title="Fullscreen">
                                 <i class="fas fa-expand"></i>
@@ -323,26 +323,12 @@
                     </div>
                     
                     <div class="terminal-body">
-                        <div id="terminal-output" class="terminal-output">
-                            <div class="welcome-message">
-                                <div class="ascii-art">
-██╗     ██╗███╗   ██╗██╗   ██╗██╗  ██╗    █████╗ ██████╗ ███████╗███████╗███╗   ██╗ █████╗ ██╗     
-██║     ██║████╗  ██║██║   ██║╚██╗██╔╝   ██╔══██╗██╔══██╗██╔════╝██╔════╝████╗  ██║██╔══██╗██║     
-██║     ██║██╔██╗ ██║██║   ██║ ╚███╔╝    ███████║██████╔╝███████╗█████╗  ██╔██╗ ██║███████║██║     
-██║     ██║██║╚██╗██║██║   ██║ ██╔██╗    ██╔══██║██╔══██╗╚════██║██╔══╝  ██║╚██╗██║██╔══██║██║     
-███████╗██║██║ ╚████║╚██████╔╝██╔╝ ██╗   ██║  ██║██║  ██║███████║███████╗██║ ╚████║██║  ██║███████╗
-╚══════╝╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚═╝  ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝╚═╝  ╚═══╝╚═╝  ╚═╝╚══════╝
-                                </div>
-                                <p>Welcome to Linux Arsenal - Your interactive Linux learning platform!</p>
-                                <p>Type <span class="highlight">'help'</span> to see available commands or <span class="highlight">'tutorial'</span> to start the guided tour.</p>
-                                <p>Use <span class="highlight">Tab</span> for auto-completion and <span class="highlight">↑/↓</span> for command history.</p>
-                            </div>
-                        </div>
-                        
-                        <div class="terminal-input-line">
-                            <span class="prompt">user@linux-arsenal:<span id="current-dir">~</span>$ </span>
-                            <input type="text" id="terminal-input" class="terminal-input" autocomplete="off" spellcheck="false" placeholder="Type a command...">
-                        </div>
+                        <div id="terminal-host" class="terminal-host"></div>
+                    </div>
+                    <div class="terminal-statusbar" id="terminal-statusbar">
+                        <span id="status-mode"><i class="fas fa-flask"></i> practice machine</span>
+                        <span id="status-cwd">~</span>
+                        <span id="status-exit">exit 0</span>
                     </div>
                 </div>
 
@@ -361,12 +347,17 @@
                         </div>
                     </div>
 
+                    <div class="command-reference">
+                        <h3><i class="fas fa-book"></i> Quick Reference</h3>
+                        <div id="quick-ref" class="quick-ref"></div>
+                    </div>
+
                     <div class="performance-tracker">
                         <h3><i class="fas fa-tachometer-alt"></i> Performance</h3>
                         <div class="performance-stats">
                             <div class="perf-stat">
-                                <span class="perf-label">Speed</span>
-                                <span class="perf-value" id="typing-speed">0 CPM</span>
+                                <span class="perf-label">Commands</span>
+                                <span class="perf-value" id="typing-speed">0</span>
                             </div>
                             <div class="perf-stat">
                                 <span class="perf-label">Accuracy</span>
@@ -378,33 +369,13 @@
             </div>
         </section>
 
-        <!-- Minimized Terminal Bar (Arch Hyprland style) -->
-        <div id="minimized-terminal" class="minimized-terminal hidden">
-            <div class="minimized-terminal-bar">
-                <div class="minimized-terminal-left">
-                    <span class="minimized-dot red"></span>
-                    <span class="minimized-dot yellow"></span>
-                    <span class="minimized-dot green"></span>
-                    <span class="minimized-terminal-title">
-                        <i class="fas fa-terminal"></i> user@linux-arsenal:~$
-                    </span>
-                </div>
-                <div class="minimized-terminal-preview" id="minimized-preview"></div>
-                <div class="minimized-terminal-right">
-                    <button id="restore-terminal" class="minimized-action" title="Restore">
-                        <i class="fas fa-window-maximize"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-
         <!-- Challenges Section -->
         <section id="challenges-section" class="content-section">
             <div class="challenges-container">
                 <div class="challenges-header">
                     <div class="challenges-title">
                         <h2><i class="fas fa-trophy"></i> Challenge Arena</h2>
-                        <p>Test your skills with over 5000+ dynamically generated scenarios</p>
+                        <p>Every challenge runs in its own sandboxed Linux machine and is verified by what you actually achieve &mdash; any correct approach works.</p>
                     </div>
                     <div class="challenge-controls">
                         <div class="challenge-search">
@@ -418,6 +389,12 @@
                             <button class="filter-btn" data-filter="advanced">Advanced</button>
                             <button class="filter-btn" data-filter="expert">Expert</button>
                         </div>
+                        <select id="category-filter" class="select-input" aria-label="Category"><option value="all">All categories</option></select>
+                        <select id="status-filter" class="select-input" aria-label="Status">
+                            <option value="all">Any status</option>
+                            <option value="todo">Not completed</option>
+                            <option value="done">Completed</option>
+                        </select>
                         <button id="generate-challenge" class="generate-btn">
                             <i class="fas fa-dice"></i> Generate New
                         </button>
@@ -426,7 +403,7 @@
                 
                 <div class="challenges-stats">
                     <div class="challenge-stat">
-                        <span class="stat-number" id="total-challenges">60</span>
+                        <span class="stat-number" id="total-challenges">0</span>
                         <span class="stat-label">Total Challenges</span>
                     </div>
                     <div class="challenge-stat">
@@ -443,6 +420,7 @@
                     <!-- Challenges will be populated by JavaScript -->
                 </div>
 
+                <div class="challenges-showing" id="challenges-showing"></div>
                 <div class="load-more-container">
                     <button id="load-more-challenges" class="load-more-btn">
                         <i class="fas fa-plus"></i> Load More Challenges
@@ -458,7 +436,7 @@
                     <h2><i class="fas fa-medal"></i> Achievement Gallery</h2>
                     <p>Unlock badges and showcase your Linux mastery</p>
                     <div class="achievement-stats">
-                        <span id="unlocked-count">0</span> / <span id="total-achievements">15</span> Unlocked
+                        <span id="unlocked-count">0</span> / <span id="total-achievements">0</span> Unlocked
                     </div>
                 </div>
                 <div id="achievements-grid" class="achievements-grid">
@@ -512,7 +490,7 @@
                     </div>
                     
                     <div class="analytics-card">
-                        <h3><i class="fas fa-target"></i> Command Accuracy Over Time</h3>
+                        <h3><i class="fas fa-bullseye"></i> Command Accuracy Over Time</h3>
                         <div class="chart-container" id="accuracy-chart">
                             <div class="chart-placeholder">Accuracy trend chart will appear here</div>
                         </div>
@@ -584,19 +562,19 @@
         </div>
 
         <!-- Challenge Modal -->
-        <div id="challenge-modal" class="challenge-modal hidden">
-            <div class="modal-content">
+        <div id="challenge-modal" class="challenge-modal hidden" role="dialog" aria-modal="true" aria-labelledby="challenge-title">
+            <div class="modal-content challenge-modal-content">
                 <div class="modal-header">
                     <h3 id="challenge-title">Challenge Title</h3>
                     <div class="challenge-timer">
                         <i class="fas fa-clock"></i>
                         <span id="challenge-time">00:00</span>
                     </div>
-                    <button id="close-challenge" class="close-modal" title="Close">
+                    <button id="close-challenge" class="close-modal" title="Close (Esc)">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body challenge-modal-body">
                     <div id="challenge-description" class="challenge-description"></div>
                     <div class="challenge-terminal">
                         <div class="terminal-header">
@@ -605,23 +583,23 @@
                                 <span class="control-dot yellow"></span>
                                 <span class="control-dot green"></span>
                             </div>
-                            <div class="terminal-title">Challenge Terminal</div>
+                            <div class="terminal-title">sandbox machine (isolated)</div>
                             <div class="challenge-progress">
-                                <span id="challenge-attempts">Attempts: 0</span>
+                                <span id="challenge-attempts">Commands: 0</span>
                             </div>
                         </div>
                         <div class="terminal-body">
-                            <div id="challenge-output" class="terminal-output"></div>
-                            <div class="terminal-input-line">
-                                <span class="prompt">user@challenge:~$ </span>
-                                <input type="text" id="challenge-input" class="terminal-input" autocomplete="off" placeholder="Enter your solution...">
-                            </div>
+                            <div id="challenge-terminal-host" class="terminal-host"></div>
                         </div>
                     </div>
+                    <div id="challenge-result" class="challenge-result hidden"></div>
                     <div class="challenge-hints">
-                        <button id="show-hint" class="hint-button">
-                            <i class="fas fa-lightbulb"></i> Show Hint
-                        </button>
+                        <div class="challenge-buttons">
+                            <button id="show-hint" class="hint-button"><i class="fas fa-lightbulb"></i> Hint</button>
+                            <button id="show-solution" class="hint-button secondary"><i class="fas fa-key"></i> Show solution</button>
+                            <button id="reset-challenge" class="hint-button secondary"><i class="fas fa-rotate-left"></i> Reset sandbox</button>
+                            <button id="next-challenge" class="hint-button secondary"><i class="fas fa-forward"></i> Next challenge</button>
+                        </div>
                         <div id="hint-display" class="hint-display hidden"></div>
                     </div>
                 </div>
@@ -639,42 +617,73 @@
                 </div>
                 <div class="modal-body">
                     <div class="settings-section">
-                        <h4>Appearance</h4>
+                        <h4>Terminal</h4>
                         <div class="setting-item">
-                            <label for="theme-select">Theme</label>
+                            <label for="theme-select">Color scheme</label>
                             <select id="theme-select">
-                                <option value="dark">Dark</option>
+                                <option value="arsenal">Arsenal (green)</option>
+                                <option value="ubuntu">Ubuntu</option>
+                                <option value="dracula">Dracula</option>
+                                <option value="solarized">Solarized Dark</option>
+                                <option value="amber">Retro Amber</option>
                                 <option value="light">Light</option>
-                                <option value="auto">Auto</option>
                             </select>
                         </div>
                         <div class="setting-item">
-                            <label for="terminal-font-size">Terminal Font Size</label>
-                            <input type="range" id="terminal-font-size" min="12" max="20" value="14">
+                            <label for="terminal-font-size">Font size</label>
+                            <input type="range" id="terminal-font-size" min="11" max="22" value="14">
                             <span id="font-size-value">14px</span>
                         </div>
+                        <div class="setting-item">
+                            <label for="cursor-style">Cursor</label>
+                            <select id="cursor-style">
+                                <option value="block">Block</option>
+                                <option value="bar">Bar</option>
+                                <option value="underline">Underline</option>
+                            </select>
+                        </div>
+                        <div class="setting-item">
+                            <label><input type="checkbox" id="cursor-blink" checked> Blinking cursor</label>
+                        </div>
                     </div>
-                    
+
                     <div class="settings-section">
-                        <h4>Learning Preferences</h4>
+                        <h4>Learning</h4>
                         <div class="setting-item">
-                            <label>
-                                <input type="checkbox" id="auto-hints" checked>
-                                Auto-show hints after 3 failed attempts
-                            </label>
+                            <label><input type="checkbox" id="auto-hints" checked> Offer a hint after 5 unsuccessful commands</label>
                         </div>
                         <div class="setting-item">
-                            <label>
-                                <input type="checkbox" id="sound-effects" checked>
-                                Sound effects
-                            </label>
+                            <label><input type="checkbox" id="sound-effects"> Sound effects</label>
                         </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h4>Data</h4>
+                        <div class="setting-item">
+                            <button id="export-progress" class="hint-button secondary"><i class="fas fa-download"></i> Export progress</button>
+                            <button id="reset-progress" class="hint-button danger"><i class="fas fa-trash"></i> Reset all progress</button>
+                        </div>
+                        <p class="settings-note">Everything is stored locally in your browser. Nothing is sent anywhere.</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <script src="js/vfs.js"></script>
+    <script src="js/shell.js"></script>
+    <script src="js/commands/util.js"></script>
+    <script src="js/commands/builtins.js"></script>
+    <script src="js/commands/files.js"></script>
+    <script src="js/commands/text.js"></script>
+    <script src="js/commands/awk.js"></script>
+    <script src="js/commands/system.js"></script>
+    <script src="js/commands/network.js"></script>
+    <script src="js/commands/devtools.js"></script>
+    <script src="js/docs.js"></script>
+    <script src="js/system.js"></script>
+    <script src="js/challenges.js"></script>
+    <script src="js/terminal.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

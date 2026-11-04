@@ -1,0 +1,14 @@
+{
+  "name": "linux-arsenal",
+  "version": "2.0.0",
+  "description": "Learn the Linux command line in a fully simulated, sandboxed Linux machine in the browser with 1000+ auto-verified challenges.",
+  "private": true,
+  "scripts": {
+    "test": "node tests/challenges.test.js && node tests/bash-diff.test.js && node tests/e2e.test.js",
+    "test:unit": "node tests/challenges.test.js && node tests/bash-diff.test.js",
+    "test:e2e": "node tests/e2e.test.js",
+    "start": "python3 -m http.server 8000"
+  },
+  "author": "0x0806",
+  "license": "UNLICENSED"
+}

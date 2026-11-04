@@ -1,341 +1,58 @@
+# Linux Arsenal
 
-# 🚀 Linux Arsenal - Ultimate Terminal Learning Platform
+Learn the Linux command line in a **complete Linux machine that is simulated in your browser**. Nothing touches your real computer. There is no backend, no install, and no network access: open `index.html` and start typing.
 
-![Linux Arsenal Banner](https://img.shields.io/badge/Linux-Arsenal-00ff88?style=for-the-badge&logo=linux&logoColor=white)
-![Version](https://img.shields.io/badge/Version-2.0.0-blue?style=for-the-badge)
-![Author](https://img.shields.io/badge/Author-0x0806-purple?style=for-the-badge)
-![PWA](https://img.shields.io/badge/PWA-Ready-green?style=for-the-badge)
+## What's inside
 
-## 🌟 The Ultimate AI-Driven 3D Gamified Linux Learning Experience
+### A real terminal emulator
+- Readline-style line editing: cursor movement, `Ctrl+A/E/B/F`, `Alt+B/F`, `Ctrl+U/K/W/Y`, `Ctrl+T`, `Alt+.`
+- History with `Up`/`Down`, reverse search with `Ctrl+R`, and history expansion (`!!`, `!n`, `!grep`, `!$`, `^old^new`)
+- Tab completion for commands, paths, `$VARS`, and git/docker/systemctl/apt subcommands, branches, services, PIDs and users (double-Tab lists every candidate)
+- ANSI colors (16/256/truecolor), a colored prompt (`PS1` escapes work), six color schemes, cursor styles
+- Multi-line input (unclosed quotes, `\`, `if`/`for`/`while`, here-docs), paste support, `Ctrl+C`, `Ctrl+L`
+- Full-screen apps: **nano**, **vim** (modes, counts, `dd yy p u`, `:w :q :wq :q! :%s///g`), **less/more/man** (paging and `/search`), **top/htop** (live, with kill), `sl`, `cmatrix`
 
-Linux Arsenal is a revolutionary web-based platform that transforms Linux command-line learning into an epic cyberpunk adventure. With cutting-edge 3D graphics, AI-powered assistance, and comprehensive gamification, this platform offers the most immersive Linux terminal learning experience ever created.
+### A bash-compatible shell
+Pipes, redirection (`> >> < 2> &> 2>&1 <<< <<EOF`), `&& || ;`, background jobs (`&`), quoting, `$VAR`, `${VAR:-x}`, `${#x}`, `${x/a/b}`, `${x^^}`, `$(…)`, backticks, `$((…))`, process substitution `<(…)`, arrays, brace and glob expansion, `if/elif/else`, `for`, C-style `for ((…))`, `while/until`, `case`, functions, `local`, aliases, `.bashrc`, and executable scripts (`chmod +x ./script.sh`). The engine is regression-tested against real GNU bash and coreutils (`tests/bash-diff.test.js`, 231 cases).
 
-## ✨ Features Overview
+### 250+ commands
+Files (`ls cp mv rm find tree stat ln du df tar gzip zip`…), text (`grep sed awk sort uniq cut tr wc head tail diff paste xargs column`…, with a full **awk** interpreter), system (`ps top kill systemctl journalctl crontab apt dpkg useradd usermod sudo su`…), networking (`ping ip ss curl wget dig traceroute nmap ssh ufw iptables`…), plus a simulated **git** and **docker**. Every command has a `man` page, `--help`, `tldr` and `examples`.
 
-### 🎮 Gamification System
-- **500+ Commands Database** - Comprehensive Linux command reference
-- **Progressive Mission System** - 100+ guided learning missions
-- **XP & Leveling** - Earn experience points and unlock new content
-- **Achievement System** - 50+ badges and trophies to collect
-- **Leaderboards** - Compete with other learners globally
-- **Skill Trees** - Multiple learning paths for different expertise levels
+### 1500+ auto-generated challenges
+Challenges cover 16 categories from beginner to expert, including realistic multi-step scenarios such as incident response, deployment, log rotation and user onboarding. Each challenge:
+- runs on its **own fresh sandbox machine**
+- is verified by **outcome** (the output or the resulting system state) rather than by matching your command text, so any correct approach counts
+- has progressive hints and a reference solution
 
-### 🤖 ARIA AI Assistant
-- **Contextual Help** - Smart suggestions based on your current task
-- **Voice Recognition** - Speak your commands and questions
-- **Real-time Syntax Checking** - Prevent errors before they happen
-- **Natural Language Processing** - Ask questions in plain English
-- **Personalized Learning** - Adapts to your learning style and pace
+Play them from the Challenges page or directly in the terminal (`challenge random`, `challenge list`, `challenge start 42`). The interactive `tutorial` guides beginners.
 
-### 🎨 Immersive 3D Experience
-- **Three.js Integration** - Stunning 3D background effects
-- **Particle Systems** - Dynamic matrix-style animations
-- **Cyberpunk Aesthetics** - Neon-lit terminal interface
-- **Glass Morphism UI** - Modern, translucent design elements
-- **Advanced Visual Effects** - Command-triggered animations
+### Progress
+XP, levels, 35 achievements, streaks, skill bars, analytics, an offline command assistant and settings. Everything is stored in `localStorage`, including your practice machine's files.
 
-### 🛡️ Security & Safety
-- **Input Sanitization** - Safe command execution in virtual environment
-- **XSS Protection** - Comprehensive security measures
-- **Virtual File System** - Practice without risk to real system
-- **Sandboxed Environment** - Isolated learning space
-
-## 🚀 Quick Start
-
-### Prerequisites
-- Modern web browser (Chrome, Firefox, Safari, Edge)
-- JavaScript enabled
-- Internet connection (for initial load)
-
-### Installation
-1. **Clone or Access** the platform
-2. **Open** `index.html` in your browser
-3. **Complete** the interactive tutorial
-4. **Start Learning** with guided missions
-
-### First Steps
-1. 📚 **Tutorial Mode** - Learn the basics with interactive guidance
-2. 🎯 **Mission System** - Start with "File System Navigator"
-3. 🤖 **AI Assistant** - Click the robot icon for help
-4. 💬 **Ask Questions** - Use natural language to get assistance
-
-## 📖 Learning Path
-
-### Beginner Level (Missions 1-5)
-- **File System Navigation** - `ls`, `cd`, `pwd`
-- **File Operations** - `touch`, `mkdir`, `cp`, `mv`, `rm`
-- **Text Viewing** - `cat`, `head`, `tail`, `less`
-- **Basic Permissions** - `chmod`, `chown`
-- **Help Systems** - `man`, `--help`, `info`
-
-### Intermediate Level (Missions 6-10)
-- **Text Processing** - `grep`, `sed`, `awk`, `sort`, `uniq`
-- **Process Management** - `ps`, `top`, `kill`, `jobs`
-- **Archive Operations** - `tar`, `gzip`, `zip`, `unzip`
-- **System Information** - `df`, `du`, `free`, `uptime`
-- **Network Basics** - `ping`, `wget`, `curl`
-
-### Advanced Level (Missions 11-15)
-- **Advanced Text Processing** - Regular expressions, complex pipelines
-- **System Administration** - Service management, cron jobs
-- **Network Troubleshooting** - `netstat`, `ss`, `nmap`
-- **Security Operations** - File permissions, user management
-- **Performance Optimization** - System monitoring and tuning
-
-## 🎯 Command Reference
-
-### Navigation Commands
+## Run locally
 ```bash
-pwd                    # Print working directory
-ls [options] [path]   # List directory contents
-cd [directory]        # Change directory
-tree                  # Display directory tree
-find [path] [criteria] # Search for files and directories
+python3 -m http.server 8000   # then open http://localhost:8000
+# or simply open index.html in a browser
 ```
 
-### File Operations
+## Tests
 ```bash
-touch filename        # Create empty file
-mkdir dirname         # Create directory
-cp source dest        # Copy files/directories
-mv source dest        # Move/rename files
-rm [options] file     # Remove files
-chmod permissions file # Change file permissions
+npm test             # all suites
+npm run test:unit    # every challenge solvable + not trivially passable, bash differential tests
+npm run test:e2e     # headless Chromium end-to-end test (set CHROME=/path/to/chrome if needed)
 ```
 
-### Text Processing
-```bash
-cat filename          # Display file contents
-grep pattern file     # Search for patterns
-sed 's/old/new/g' file # Text substitution
-awk '{print $1}' file # Column extraction
-sort filename         # Sort file contents
+## Layout
+```
+index.html, style.css, script.js   UI and application controller
+js/vfs.js                          virtual filesystem (permissions, symlinks, devices)
+js/shell.js                        bash lexer, parser, expansions, executor
+js/commands/*.js                   command implementations (files, text, awk, system, network, git/docker)
+js/system.js                       simulated machine: base filesystem, users, processes, services, packages, network
+js/docs.js                         man pages, --help, tldr, examples
+js/challenges.js                   challenge templates, generator, sandbox and verification
+js/terminal.js                     terminal emulator and full-screen apps
+tests/                             Node and headless-browser test suites
 ```
 
-### System Monitoring
-```bash
-ps aux                # List all processes
-top                   # Real-time process monitor
-kill PID              # Terminate process
-df -h                 # Disk space usage
-free -h               # Memory usage
-uptime                # System uptime
-```
-
-## 🎮 Game Features
-
-### Experience System
-- **XP Rewards** - Earn points for successful commands
-- **Level Progression** - Unlock new missions and features
-- **Skill Badges** - Specialized achievement categories
-- **Learning Streaks** - Bonus rewards for consistent practice
-
-### Mission Types
-- **Guided Tutorials** - Step-by-step learning
-- **Challenge Mode** - Timed command challenges
-- **Sandbox Mode** - Free exploration and practice
-- **CTF Challenges** - Capture-the-flag style puzzles
-
-### Social Features
-- **Global Leaderboards** - See how you rank worldwide
-- **Progress Sharing** - Share achievements with friends
-- **Learning Statistics** - Track your improvement over time
-
-## 🛠️ Technical Details
-
-### Technologies Used
-- **Frontend**: HTML5, CSS3, JavaScript ES6+
-- **3D Graphics**: Three.js
-- **Animations**: GSAP
-- **Particles**: Particles.js
-- **PWA**: Service Worker, Web App Manifest
-- **Storage**: IndexedDB, LocalStorage
-
-### Architecture
-- **Progressive Web App** - Installable and offline-capable
-- **Responsive Design** - Works on desktop, tablet, and mobile
-- **Modular JavaScript** - Clean, maintainable code structure
-- **Component-Based UI** - Reusable interface elements
-
-### Browser Support
-- ✅ Chrome 80+
-- ✅ Firefox 75+
-- ✅ Safari 13+
-- ✅ Edge 80+
-- ✅ Mobile browsers
-
-## 🎨 Customization
-
-### Themes
-- **Cyberpunk Dark** (Default) - Green neon on black
-- **Matrix Light** - Light theme with green accents
-- **Retro Terminal** - Classic green terminal
-- **Deep Ocean** - Blue color scheme
-- **Neon Purple** - Purple cyberpunk theme
-
-### Accessibility
-- **Keyboard Navigation** - Full keyboard support
-- **Screen Reader Compatible** - ARIA labels and semantic HTML
-- **High Contrast Mode** - Enhanced visibility options
-- **Reduced Motion** - Respects user preferences
-
-## 🔧 Development
-
-### Local Development
-```bash
-# Serve the application locally
-python -m http.server 8000
-# Or use any static file server
-```
-
-### File Structure
-```
-linux-arsenal/
-├── index.html          # Main application entry
-├── style.css          # Comprehensive styling
-├── script.js          # Core application logic
-├── manifest.json      # PWA manifest
-├── sw.js              # Service worker
-└── README.md          # This file
-```
-
-### Contributing
-This project is created and maintained by **0x0806**. While it's a showcase project, feedback and suggestions are welcome through the platform's built-in feedback system.
-
-## 🏆 Achievements & Easter Eggs
-
-### Hidden Features
-- **Konami Code** - Unlock developer mode
-- **Matrix References** - Hidden Matrix-themed content
-- **Developer Console** - Special messages for curious users
-- **ARG Elements** - Alternate reality game components
-
-### Special Commands
-```bash
-0x0806              # Creator's message
-matrix              # Activate Matrix mode
-hack                # Enable hacker mode
-neo                 # Matrix storyline
-rabbit              # Follow the white rabbit
-```
-
-## 📊 Analytics & Progress
-
-### Progress Tracking
-- **Learning Statistics** - Commands mastered, time spent
-- **Skill Assessment** - Competency in different areas
-- **Mission Progress** - Completion status and scores
-- **Achievement History** - Timeline of unlocked badges
-
-### Data Export
-- **Progress Export** - Download your learning data
-- **Certificate Generation** - Completion certificates
-- **Portfolio Integration** - Showcase your skills
-
-## 🌐 Deployment
-
-### Replit Deployment
-This project is optimized for deployment on Replit:
-1. Fork or import the project
-2. Run using the built-in web server
-3. Access via the provided URL
-4. Share with others instantly
-
-### PWA Installation
-1. Visit the platform in a supported browser
-2. Look for the "Install" prompt
-3. Add to home screen on mobile
-4. Access like a native app
-
-## 🔐 Privacy & Security
-
-### Data Handling
-- **Local Storage Only** - No data sent to external servers
-- **Privacy First** - Your progress stays on your device
-- **Secure Environment** - Safe command execution
-- **No Tracking** - Respects user privacy
-
-### Security Features
-- **Input Validation** - Prevents malicious commands
-- **Sandboxed Execution** - Virtual environment only
-- **XSS Protection** - Comprehensive security measures
-
-## 📱 Mobile Experience
-
-### Responsive Design
-- **Touch-Friendly** - Optimized for touch interfaces
-- **Mobile Keyboard** - Smart keyboard suggestions
-- **Gesture Support** - Swipe navigation
-- **Offline Mode** - Works without internet
-
-## 🎓 Educational Benefits
-
-### Learning Outcomes
-- **Practical Linux Skills** - Real-world applicable knowledge
-- **Command-Line Proficiency** - Terminal mastery
-- **System Administration** - Server management skills
-- **Automation Skills** - Shell scripting capabilities
-
-### Pedagogical Approach
-- **Progressive Learning** - Builds skills incrementally
-- **Immediate Feedback** - Instant error correction
-- **Gamified Motivation** - Engaging learning experience
-- **Contextual Help** - Just-in-time assistance
-
-## 📞 Support & Resources
-
-### Getting Help
-- **AI Assistant (ARIA)** - In-platform help system
-- **Interactive Tutorials** - Guided learning paths
-- **Command Reference** - Comprehensive documentation
-- **Community Features** - Learn with others
-
-### Additional Resources
-- **Linux Manual Pages** - Integrated documentation
-- **Video Tutorials** - Visual learning aids
-- **Practice Challenges** - Skill reinforcement
-- **Certification Paths** - Structured learning tracks
-
-## 🚀 Future Enhancements
-
-### Planned Features
-- **Multiplayer Missions** - Collaborative learning
-- **Advanced CTF Challenges** - Security-focused puzzles
-- **Docker Integration** - Container management learning
-- **Cloud Platform Simulation** - AWS, Azure, GCP training
-
-### Community Requests
-- **Custom Mission Creator** - User-generated content
-- **Team Competitions** - Group challenges
-- **Instructor Dashboard** - Educational institution support
-- **Advanced Analytics** - Detailed learning insights
-
-## 📜 License & Credits
-
-### Created by 0x0806
-**Linux Arsenal** - The Ultimate Terminal Learning Experience
-Copyright (c) 2024 - All Rights Reserved
-
-### Acknowledgments
-- **Three.js** - 3D graphics library
-- **GSAP** - Animation framework
-- **Particles.js** - Particle system
-- **Font Awesome** - Icon library
-
----
-
-## 🌟 Start Your Linux Journey Today!
-
-Transform your command-line skills with the most advanced Linux learning platform ever created. Join thousands of learners who have mastered Linux through the power of gamification, AI assistance, and immersive 3D experiences.
-
-**Ready to become a Linux master?** Open the platform and begin your epic journey through the world of command-line mastery!
-
----
-
-*Linux Arsenal - Where Linux Learning Becomes an Adventure* 🚀
-
-**Version**: 2.0.0 - The Ultimate Edition  
-**Created by**: 0x0806  
-**Platform**: Progressive Web Application  
-**Experience Level**: Beginner to Expert  
-**Time Investment**: Self-paced learning  
+Created by **0x0806**.
