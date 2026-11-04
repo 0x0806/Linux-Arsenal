@@ -434,7 +434,7 @@
         file('/etc/os-release', 'PRETTY_NAME="Ubuntu 24.04.1 LTS"\nNAME="Ubuntu"\nVERSION_ID="24.04"\nVERSION="24.04.1 LTS (Noble Numbat)"\nVERSION_CODENAME=noble\nID=ubuntu\nID_LIKE=debian\nHOME_URL="https://www.ubuntu.com/"\nSUPPORT_URL="https://help.ubuntu.com/"\nUBUNTU_CODENAME=noble\n');
         file('/etc/issue', 'Ubuntu 24.04.1 LTS \\n \\l\n\n');
         file('/etc/lsb-release', 'DISTRIB_ID=Ubuntu\nDISTRIB_RELEASE=24.04\nDISTRIB_CODENAME=noble\nDISTRIB_DESCRIPTION="Ubuntu 24.04.1 LTS"\n');
-        file('/etc/motd', '\nWelcome to Linux Arsenal (GNU/Linux 6.8.0-45-generic x86_64)\n\n * Documentation:  type `help` or `man <command>`\n * Challenges:     type `challenge list`\n * Tutorial:       type `tutorial`\n\n');
+        file('/etc/motd', '\nWelcome to Linux Arsenal (GNU/Linux 6.8.0-45-generic x86_64) - developed by 0x0806\n\n * Documentation:  type `help` or `man <command>`\n * Challenges:     type `challenge list`\n * Tutorial:       type `tutorial`\n\n');
         file('/etc/shells', '# /etc/shells: valid login shells\n/bin/sh\n/bin/bash\n/usr/bin/bash\n/bin/dash\n/usr/bin/zsh\n');
         file('/etc/timezone', 'Etc/UTC\n');
         file('/etc/resolv.conf', '# This is /run/systemd/resolve/stub-resolv.conf managed by man:systemd-resolved(8).\nnameserver 127.0.0.53\noptions edns0 trust-ad\nsearch internal\n');

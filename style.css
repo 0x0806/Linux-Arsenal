@@ -2764,3 +2764,14 @@ body::after {
     .ai-assistant { width: calc(100vw - 20px); right: 10px; bottom: 10px; }
     .toast-container { left: 10px; right: 10px; top: 76px; }
 }
+
+/* branding */
+.loading-brand { margin-top: 14px; color: var(--text-secondary); font-size: 14px; letter-spacing: 0.5px; }
+.loading-brand strong { color: var(--accent-green); }
+.site-footer { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 10px; padding: 24px 16px 90px; color: var(--text-muted); font-size: 14px; border-top: 1px solid var(--border-color); margin-top: 30px; }
+.site-footer a { color: var(--text-secondary); text-decoration: none; }
+.site-footer a:hover { color: var(--accent-green); }
+.site-footer strong { color: var(--accent-green); }
+.footer-sep { opacity: 0.5; }
+.title-author { font-size: 11px; color: var(--text-muted); letter-spacing: 1px; white-space: nowrap; }
+@media (max-width: 760px) { .platform-title { display: flex; } .platform-title .title-text, .platform-title .title-subtitle { display: none; } .title-author { font-size: 10px; } }

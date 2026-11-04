@@ -126,7 +126,8 @@
                 ' * A complete, sandboxed Linux machine runs in your browser: ' + Object.keys(LA.commands).length + '+ commands, real bash syntax.\n' +
                 ' * New here? Type ' + C.byellow + 'tutorial' + C.reset + '.  Need help? ' + C.byellow + 'help' + C.reset + ', ' + C.byellow + 'man ls' + C.reset + ', ' + C.byellow + 'tldr tar' + C.reset + ', ' + C.byellow + 'examples grep' + C.reset + '.\n' +
                 ' * Play: ' + C.byellow + 'challenge random' + C.reset + ' (' + this.challenges.length + ' challenges, each in its own sandbox).\n' +
-                ' * Keys: Tab completion, Up/Down history, Ctrl+R search, Ctrl+L clear, Ctrl+C cancel.\n\n';
+                ' * Keys: Tab completion, Up/Down history, Ctrl+R search, Ctrl+L clear, Ctrl+C cancel.\n\n' +
+                C.gray + ' Developed by ' + C.reset + C.bcyan + '0x0806' + C.reset + C.gray + ' - github.com/0x0806/Linux-Arsenal' + C.reset + '\n\n';
         }
         initTerminal() {
             const host = $('terminal-host');
@@ -281,6 +282,12 @@
                 return 0;
             }, { builtin: true, virtual: true });
             LA.commands.stats = LA.commands.xp;
+            LA.util.register('about', (ctx) => {
+                ctx.outln(C.bgreen + 'Linux Arsenal 2.0' + C.reset + ' - interactive Linux learning platform');
+                ctx.outln('Developed by ' + C.bcyan + '0x0806' + C.reset);
+                ctx.outln('Source: https://github.com/0x0806/Linux-Arsenal');
+                return 0;
+            }, { builtin: true, virtual: true });
             function diffColor(d) { return { beginner: C.green, intermediate: C.cyan, advanced: C.yellow, expert: C.red }[d] || ''; }
             // run pending terminal transitions after the command finished
             const origRun = LA.Terminal.prototype.execute;
